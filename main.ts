@@ -32,20 +32,22 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		this.addCommand({
 			id: "add-furigana-to-selected-text",
 			name: "Add furigana to selected text",
-			editorCallback: (editor: Editor) => {
+			editorCallback: async (editor: Editor) => {
 				const selection = editor.getSelection();
-				editor.replaceSelection(
-					this.furiganaService.generateFurigana(selection)
-				);
+				const selectionWithFurigana =
+					await this.furiganaService.generateFurigana(selection);
+				editor.replaceSelection(selectionWithFurigana);
 			},
 		});
 
 		this.addCommand({
 			id: "add-furigana-to-entire-document",
 			name: "Add furigana to entire document",
-			editorCallback: (editor: Editor) => {
+			editorCallback: async (editor: Editor) => {
 				const content = editor.getValue();
-				editor.setValue(this.furiganaService.generateFurigana(content));
+				const contentWithFurigana =
+					await this.furiganaService.generateFurigana(content);
+				editor.setValue(contentWithFurigana);
 			},
 		});
 	}

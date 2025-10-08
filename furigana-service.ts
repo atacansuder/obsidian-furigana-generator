@@ -31,7 +31,7 @@ export class FuriganaService {
 		}
 	}
 
-	public generateFurigana(text: string): string {
+	public async generateFurigana(text: string): Promise<string> {
 		if (!this.tokenizer) {
 			new Notice(
 				"Furigana generator is not ready, please wait for the plugin to load."
