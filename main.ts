@@ -50,6 +50,28 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 				editor.setValue(contentWithFurigana);
 			},
 		});
+
+		this.addCommand({
+			id: "remove-furigana-from-selected-text",
+			name: "Remove furigana from selected text",
+			editorCallback: async (editor: Editor) => {
+				const selection = editor.getSelection();
+				const selectionWithoutFurigana =
+					await this.furiganaService.removeFurigana(selection);
+				editor.replaceSelection(selectionWithoutFurigana);
+			},
+		});
+
+		this.addCommand({
+			id: "remove-furigana-from-entire-document",
+			name: "Remove furigana from entire document",
+			editorCallback: async (editor: Editor) => {
+				const content = editor.getValue();
+				const contentWithoutFurigana =
+					await this.furiganaService.removeFurigana(content);
+				editor.setValue(contentWithoutFurigana);
+			},
+		});
 	}
 
 	onunload() {}

@@ -66,4 +66,9 @@ export class FuriganaService {
 		console.log(tokens);
 		return result;
 	}
+
+	public async removeFurigana(text: string): Promise<string> {
+		const furiganaRegex = /<ruby>(.*?)<rt>.*?<\/rt><\/ruby>/g;
+		return text.replace(furiganaRegex, "$1");
+	}
 }
