@@ -1,4 +1,5 @@
 import * as kuromoji from "@patdx/kuromoji";
+import * as wanakana from "wanakana";
 import NodeDictionaryLoader from "@patdx/kuromoji/node";
 import { Notice } from "obsidian";
 
@@ -28,5 +29,41 @@ export class FuriganaService {
 				"Furigana dictionary not found. Please try reinstalling the plugin."
 			);
 		}
+	}
+
+	public generateFurigana(text: string): string {
+		if (!this.tokenizer) {
+			new Notice(
+				"Furigana generator is not ready, please wait for the plugin to load."
+			);
+			return text;
+		}
+
+		const tokens = this.tokenizer.tokenize(text);
+		const kanjiRegex: RegExp = /[一-龯]/u;
+		const result = tokens
+			.map((token) => {
+				const surface = token.surface_form;
+				const reading = token.reading;
+
+				if (!reading || token.word_type === "UNKNOWN") {
+					return surface;
+				}
+
+				if (!kanjiRegex.test(surface)) {
+					return surface;
+				}
+
+				const hiraganaReading = wanakana.toHiragana(reading);
+				if (surface === hiraganaReading) {
+					return surface;
+				}
+
+				return `<ruby>${surface}<rt>${hiraganaReading}</rt></ruby>`;
+			})
+			.join("");
+
+		console.log(tokens);
+		return result;
 	}
 }

@@ -1,5 +1,5 @@
 import { FuriganaService } from "furigana-service";
-import { Notice, Plugin, FileSystemAdapter } from "obsidian";
+import { Editor, Notice, Plugin, FileSystemAdapter } from "obsidian";
 
 interface FuriganaGeneratorPluginSettings {
 	mySetting: string;
@@ -28,6 +28,17 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			);
 			return;
 		}
+
+		this.addCommand({
+			id: "add-furigana-to-selected-text",
+			name: "Add furigana to selected text",
+			editorCallback: (editor: Editor) => {
+				const selection = editor.getSelection();
+				editor.replaceSelection(
+					this.furiganaService.generateFurigana(selection)
+				);
+			},
+		});
 	}
 
 	onunload() {}
