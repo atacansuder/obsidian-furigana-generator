@@ -39,6 +39,15 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 				);
 			},
 		});
+
+		this.addCommand({
+			id: "add-furigana-to-entire-document",
+			name: "Add furigana to entire document",
+			editorCallback: (editor: Editor) => {
+				const content = editor.getValue();
+				editor.setValue(this.furiganaService.generateFurigana(content));
+			},
+		});
 	}
 
 	onunload() {}
