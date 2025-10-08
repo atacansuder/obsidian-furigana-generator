@@ -39,11 +39,27 @@ export class FuriganaService {
 			return text;
 		}
 
-		const tokens = this.tokenizer.tokenize(text);
+		const placeholders: string[] = [];
+		const rubyRegex = /<ruby>.*?<\/rt><\/ruby>/g;
+		let placeholderIndex = 0;
+
+		const textWithPlaceholders = text.replace(rubyRegex, (match) => {
+			const placeholder = `__FURIGANA_PLACEHOLDER_${placeholderIndex}__`;
+			placeholders[placeholderIndex] = match;
+			placeholderIndex++;
+			return placeholder;
+		});
+
+		const tokens = this.tokenizer.tokenize(textWithPlaceholders);
 		const kanjiRegex: RegExp = /[一-龯]/u;
-		const result = tokens
+		let processedText = tokens
 			.map((token) => {
 				const surface = token.surface_form;
+
+				if (surface.startsWith("__FURIGANA_PLACEHOLDER_")) {
+					return surface;
+				}
+
 				const reading = token.reading;
 
 				if (!reading || token.word_type === "UNKNOWN") {
@@ -63,8 +79,12 @@ export class FuriganaService {
 			})
 			.join("");
 
-		console.log(tokens);
-		return result;
+		placeholders.forEach((originalTag, index) => {
+			const placeholder = `__FURIGANA_PLACEHOLDER_${index}__`;
+			processedText = processedText.replace(placeholder, originalTag);
+		});
+
+		return processedText;
 	}
 
 	public async removeFurigana(text: string): Promise<string> {
