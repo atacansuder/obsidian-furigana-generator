@@ -136,7 +136,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		const selectionWithFurigana =
 			await this.furiganaService.generateFurigana(
 				selection,
-				this.settings.jlptLevelsToInclude
+				this.settings.jlptLevelsToInclude,
+				this.settings.scope
 			);
 		editor.replaceSelection(selectionWithFurigana);
 	}
@@ -145,7 +146,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		const content = editor.getValue();
 		const contentWithFurigana = await this.furiganaService.generateFurigana(
 			content,
-			this.settings.jlptLevelsToInclude
+			this.settings.jlptLevelsToInclude,
+			this.settings.scope
 		);
 		editor.setValue(contentWithFurigana);
 	}

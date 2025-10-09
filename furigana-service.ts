@@ -3,7 +3,7 @@ import * as wanakana from "wanakana";
 import NodeDictionaryLoader from "@patdx/kuromoji/node";
 import { Notice } from "obsidian";
 
-import { JlptLevelsToInclude } from "lib/types";
+import { FirstInstanceScope, JlptLevelsToInclude } from "lib/types";
 import { jlptN5, jlptN4, jlptN3, jlptN2, jlptN1 } from "data/kanji-sets";
 
 type Tokenizer = Awaited<
@@ -36,8 +36,67 @@ export class FuriganaService {
 
 	public async generateFurigana(
 		text: string,
-		jlptLevelsToInclude: JlptLevelsToInclude
+		jlptLevelsToInclude: JlptLevelsToInclude,
+		scope: FirstInstanceScope
 	): Promise<string> {
+		switch (scope) {
+			case "PARAGRAPH":
+				const paragraphs = text.split("\n");
+				return paragraphs
+					.map((paragraph) => {
+						const seenInParagraph = new Set<string>();
+						return this.processText(
+							paragraph,
+							jlptLevelsToInclude,
+							scope,
+							seenInParagraph
+						);
+					})
+					.join("\n");
+			case "SENTENCE":
+				const paragraphSeparated = text.split("\n");
+				const sentenceRegex = /(?<=[。！？])/g;
+				return paragraphSeparated
+					.map((paragraph) => {
+						const sentences = paragraph.split(sentenceRegex);
+						return sentences
+							.map((sentence) => {
+								if (sentence.trim() === "") return sentence;
+								const seenInSentence = new Set<string>();
+								return this.processText(
+									sentence,
+									jlptLevelsToInclude,
+									scope,
+									seenInSentence
+								);
+							})
+							.join("");
+					})
+					.join("\n");
+			case "ENTIRE_TEXT":
+			case "ALL":
+			default:
+				const seenWords = new Set<string>();
+				return this.processText(
+					text,
+					jlptLevelsToInclude,
+					scope,
+					seenWords
+				);
+		}
+	}
+
+	public async removeFurigana(text: string): Promise<string> {
+		const furiganaRegex = /<ruby>(.*?)<rt>.*?<\/rt><\/ruby>/g;
+		return text.replace(furiganaRegex, "$1");
+	}
+
+	private processText(
+		text: string,
+		jlptLevelsToInclude: JlptLevelsToInclude,
+		scope: FirstInstanceScope,
+		seenWords: Set<string>
+	): string {
 		if (!this.tokenizer) {
 			new Notice(
 				"Furigana generator is not ready, please wait for the plugin to load."
@@ -75,7 +134,7 @@ export class FuriganaService {
 
 		const tokens = this.tokenizer.tokenize(textWithPlaceholders);
 		const kanjiRegex: RegExp = /[一-龯]/u;
-		console.log(tokens);
+
 		let processedText = tokens
 			.map((token) => {
 				const surface = token.surface_form;
@@ -106,9 +165,17 @@ export class FuriganaService {
 					return surface;
 				}
 
+				if (scope !== "ALL" && seenWords.has(surface)) {
+					return surface;
+				}
+
 				const hiraganaReading = wanakana.toHiragana(reading);
 				if (surface === hiraganaReading) {
 					return surface;
+				}
+
+				if (scope !== "ALL") {
+					seenWords.add(surface);
 				}
 
 				return `<ruby>${surface}<rt>${hiraganaReading}</rt></ruby>`;
@@ -121,10 +188,5 @@ export class FuriganaService {
 		});
 
 		return processedText;
-	}
-
-	public async removeFurigana(text: string): Promise<string> {
-		const furiganaRegex = /<ruby>(.*?)<rt>.*?<\/rt><\/ruby>/g;
-		return text.replace(furiganaRegex, "$1");
 	}
 }

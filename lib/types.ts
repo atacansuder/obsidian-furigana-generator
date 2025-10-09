@@ -6,4 +6,8 @@ export type JlptLevelsToInclude = {
 	n2: boolean;
 	n1: boolean;
 };
-export type FirstInstanceScope = "off" | "paragraph" | "sentence" | "all";
+export type FirstInstanceScope =
+	| "ENTIRE_TEXT"
+	| "PARAGRAPH"
+	| "SENTENCE"
+	| "ALL";
