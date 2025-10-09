@@ -3,6 +3,9 @@ import * as wanakana from "wanakana";
 import NodeDictionaryLoader from "@patdx/kuromoji/node";
 import { Notice } from "obsidian";
 
+import { JlptLevelsToInclude } from "lib/types";
+import { jlptN5, jlptN4, jlptN3, jlptN2, jlptN1 } from "data/kanji-sets";
+
 type Tokenizer = Awaited<
 	ReturnType<InstanceType<typeof kuromoji.TokenizerBuilder>["build"]>
 >;
@@ -31,12 +34,32 @@ export class FuriganaService {
 		}
 	}
 
-	public async generateFurigana(text: string): Promise<string> {
+	public async generateFurigana(
+		text: string,
+		jlptLevelsToInclude: JlptLevelsToInclude
+	): Promise<string> {
 		if (!this.tokenizer) {
 			new Notice(
 				"Furigana generator is not ready, please wait for the plugin to load."
 			);
 			return text;
+		}
+
+		const kanjiToSkipSet = new Set<String>();
+		const levelMap = {
+			n5: jlptN5,
+			n4: jlptN4,
+			n3: jlptN3,
+			n2: jlptN2,
+			n1: jlptN1,
+		};
+
+		for (const level in jlptLevelsToInclude) {
+			if (!jlptLevelsToInclude[level as keyof JlptLevelsToInclude]) {
+				levelMap[level as keyof typeof levelMap].forEach((kanji) =>
+					kanjiToSkipSet.add(kanji)
+				);
+			}
 		}
 
 		const placeholders: string[] = [];
@@ -67,6 +90,18 @@ export class FuriganaService {
 				}
 
 				if (!kanjiRegex.test(surface)) {
+					return surface;
+				}
+
+				const kanjiCharsInToken = [...surface].filter((char) =>
+					kanjiRegex.test(char)
+				);
+				if (
+					kanjiCharsInToken.length > 0 &&
+					kanjiCharsInToken.every((kanji) =>
+						kanjiToSkipSet.has(kanji)
+					)
+				) {
 					return surface;
 				}
 

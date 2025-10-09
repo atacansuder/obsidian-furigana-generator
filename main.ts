@@ -10,21 +10,16 @@ import {
 } from "obsidian";
 import { getLangStrings } from "./lang/translations";
 import { LanguageSetting } from "lib/types";
+import { JlptLevelsToInclude } from "lib/types";
 
 interface FuriganaGeneratorPluginSettings {
 	language: LanguageSetting;
-	jlptLevelsToExclude: {
-		n5: boolean;
-		n4: boolean;
-		n3: boolean;
-		n2: boolean;
-		n1: boolean;
-	};
+	jlptLevelsToInclude: JlptLevelsToInclude;
 }
 
 const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	language: "auto",
-	jlptLevelsToExclude: {
+	jlptLevelsToInclude: {
 		n5: true,
 		n4: true,
 		n3: true,
@@ -137,14 +132,18 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 	async addFuriganaToSelection(editor: Editor) {
 		const selection = editor.getSelection();
 		const selectionWithFurigana =
-			await this.furiganaService.generateFurigana(selection);
+			await this.furiganaService.generateFurigana(
+				selection,
+				this.settings.jlptLevelsToInclude
+			);
 		editor.replaceSelection(selectionWithFurigana);
 	}
 
 	async addFuriganaToDocument(editor: Editor) {
 		const content = editor.getValue();
 		const contentWithFurigana = await this.furiganaService.generateFurigana(
-			content
+			content,
+			this.settings.jlptLevelsToInclude
 		);
 		editor.setValue(contentWithFurigana);
 	}
@@ -200,7 +199,7 @@ class FuriganaSettingTab extends PluginSettingTab {
 			.setName(t.settingJlptHeading)
 			.setDesc(t.settingJlptDesc);
 
-		const jlptLevels: (keyof typeof this.plugin.settings.jlptLevelsToExclude)[] =
+		const jlptLevels: (keyof typeof this.plugin.settings.jlptLevelsToInclude)[] =
 			["n5", "n4", "n3", "n2", "n1"];
 		for (const level of jlptLevels) {
 			new Setting(containerEl)
@@ -208,10 +207,10 @@ class FuriganaSettingTab extends PluginSettingTab {
 				.addToggle((toggle) => {
 					toggle
 						.setValue(
-							this.plugin.settings.jlptLevelsToExclude[level]
+							this.plugin.settings.jlptLevelsToInclude[level]
 						)
 						.onChange(async (value) => {
-							this.plugin.settings.jlptLevelsToExclude[level] =
+							this.plugin.settings.jlptLevelsToInclude[level] =
 								value;
 							await this.plugin.saveSettings();
 						});
