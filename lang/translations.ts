@@ -31,7 +31,7 @@ const en: Translations = {
 		"Set the plugin's interface language. 'Auto' will use Obsidian's language setting.",
 	settingLanguageOptAuto: "Auto",
 	settingLanguageOptEn: "English",
-	settingLanguageOptJa: "Japanese",
+	settingLanguageOptJa: "Japanese (日本語)",
 	settingReloadNotice:
 		"Plugin language updated. Please reload Obsidian for the changes to take full effect in the command palette and menus.",
 };
