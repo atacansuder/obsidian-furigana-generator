@@ -13,10 +13,24 @@ import { LanguageSetting } from "lib/types";
 
 interface FuriganaGeneratorPluginSettings {
 	language: LanguageSetting;
+	jlptLevelsToExclude: {
+		n5: boolean;
+		n4: boolean;
+		n3: boolean;
+		n2: boolean;
+		n1: boolean;
+	};
 }
 
 const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	language: "auto",
+	jlptLevelsToExclude: {
+		n5: true,
+		n4: true,
+		n3: true,
+		n2: true,
+		n1: true,
+	},
 };
 
 export default class ObsidianFuriganaGenerator extends Plugin {
@@ -180,5 +194,28 @@ class FuriganaSettingTab extends PluginSettingTab {
 						this.display();
 					});
 			});
+
+		new Setting(containerEl)
+			.setHeading()
+			.setName(t.settingJlptHeading)
+			.setDesc(t.settingJlptDesc);
+
+		const jlptLevels: (keyof typeof this.plugin.settings.jlptLevelsToExclude)[] =
+			["n5", "n4", "n3", "n2", "n1"];
+		for (const level of jlptLevels) {
+			new Setting(containerEl)
+				.setName(t.settingJlptLevel(level))
+				.addToggle((toggle) => {
+					toggle
+						.setValue(
+							this.plugin.settings.jlptLevelsToExclude[level]
+						)
+						.onChange(async (value) => {
+							this.plugin.settings.jlptLevelsToExclude[level] =
+								value;
+							await this.plugin.saveSettings();
+						});
+				});
+		}
 	}
 }

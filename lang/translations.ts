@@ -16,6 +16,9 @@ interface Translations {
 	settingLanguageOptEn: string;
 	settingLanguageOptJa: string;
 	settingReloadNotice: string;
+	settingJlptHeading: string;
+	settingJlptDesc: string;
+	settingJlptLevel: (level: string) => string;
 }
 
 const en: Translations = {
@@ -31,9 +34,15 @@ const en: Translations = {
 		"Set the plugin's interface language. 'Auto' will use Obsidian's language setting.",
 	settingLanguageOptAuto: "Auto",
 	settingLanguageOptEn: "English",
-	settingLanguageOptJa: "Japanese (日本語)",
+	settingLanguageOptJa: "日本語",
 	settingReloadNotice:
 		"Plugin language updated. Please reload Obsidian for the changes to take full effect in the command palette and menus.",
+
+	settingJlptHeading: "JLPT Filtering",
+	settingJlptDesc:
+		"Toggle off a level to exclude its kanji from Furigana generation.",
+	settingJlptLevel: (level: string) =>
+		`Include kanji from JLPT ${level.toUpperCase()}`,
 };
 
 const ja: Translations = {
@@ -48,10 +57,16 @@ const ja: Translations = {
 	settingLanguageDesc:
 		"プラグインのインターフェース言語を設定します。「自動」に設定するとObsidianの言語設定が使用されます。",
 	settingLanguageOptAuto: "自動",
-	settingLanguageOptEn: "英語 (English)",
+	settingLanguageOptEn: "English",
 	settingLanguageOptJa: "日本語",
 	settingReloadNotice:
 		"プラグインの言語を更新しました。コマンドパレットやメニューに完全に反映させるには、Obsidianをリロードしてください。",
+
+	settingJlptHeading: "JLPTフィルター",
+	settingJlptDesc:
+		"レベルをオフにすると、そのレベルの漢字がルビ振りから除外されます。",
+	settingJlptLevel: (level: string) =>
+		`JLPT ${level.toUpperCase()}の漢字を含める`,
 };
 
 const localizations: Record<string, Translations> = {
