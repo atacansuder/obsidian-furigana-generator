@@ -122,11 +122,13 @@ export class FuriganaService {
 		}
 
 		const placeholders: string[] = [];
-		const rubyRegex = /<ruby>.*?<\/rt><\/ruby>/g;
+		// Regex to find existing ruby tags and both Obsidian and Markdown links
+		const exclusionRegex =
+			/(<ruby>.*?<\/rt><\/ruby>|\[\[.*?\]\]|\[.*?\]\(.*?\))/g;
 		let placeholderIndex = 0;
 
-		const textWithPlaceholders = text.replace(rubyRegex, (match) => {
-			const placeholder = `__FURIGANA_PLACEHOLDER_${placeholderIndex}__`;
+		const textWithPlaceholders = text.replace(exclusionRegex, (match) => {
+			const placeholder = `__EXCLUDED_PLACEHOLDER_${placeholderIndex}__`;
 			placeholders[placeholderIndex] = match;
 			placeholderIndex++;
 			return placeholder;
@@ -139,7 +141,7 @@ export class FuriganaService {
 			.map((token) => {
 				const surface = token.surface_form;
 
-				if (surface.startsWith("__FURIGANA_PLACEHOLDER_")) {
+				if (surface.startsWith("__EXCLUDED_PLACEHOLDER_")) {
 					return surface;
 				}
 
@@ -236,7 +238,7 @@ export class FuriganaService {
 			.join("");
 
 		placeholders.forEach((originalTag, index) => {
-			const placeholder = `__FURIGANA_PLACEHOLDER_${index}__`;
+			const placeholder = `__EXCLUDED_PLACEHOLDER_${index}__`;
 			processedText = processedText.replace(placeholder, originalTag);
 		});
 
