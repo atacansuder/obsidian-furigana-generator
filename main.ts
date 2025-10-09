@@ -9,16 +9,18 @@ import {
 	FileSystemAdapter,
 } from "obsidian";
 import { getLangStrings } from "./lang/translations";
-import { LanguageSetting } from "lib/types";
+import { FirstInstanceScope, LanguageSetting } from "lib/types";
 import { JlptLevelsToInclude } from "lib/types";
 
 interface FuriganaGeneratorPluginSettings {
 	language: LanguageSetting;
+	scope: FirstInstanceScope;
 	jlptLevelsToInclude: JlptLevelsToInclude;
 }
 
 const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	language: "auto",
+	scope: "ALL",
 	jlptLevelsToInclude: {
 		n5: true,
 		n4: true,
@@ -190,6 +192,23 @@ class FuriganaSettingTab extends PluginSettingTab {
 						this.plugin.settings.language = value;
 						await this.plugin.saveSettings();
 						new Notice(t.settingReloadNotice);
+						this.display();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName(t.settingScopeHeading)
+			.setDesc(t.settingScopeDesc)
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("ALL", t.settingScopeAll)
+					.addOption("SENTENCE", t.settingScopeSentence)
+					.addOption("PARAGRAPH", t.settingScopeParagraph)
+					.addOption("ENTIRE_TEXT", t.settingScopeEntireText)
+					.setValue(this.plugin.settings.scope)
+					.onChange(async (value: FirstInstanceScope) => {
+						this.plugin.settings.scope = value;
+						await this.plugin.saveSettings();
 						this.display();
 					});
 			});

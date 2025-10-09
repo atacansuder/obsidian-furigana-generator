@@ -16,6 +16,12 @@ interface Translations {
 	settingLanguageOptEn: string;
 	settingLanguageOptJa: string;
 	settingReloadNotice: string;
+	settingScopeHeading: string;
+	settingScopeDesc: string;
+	settingScopeAll: string;
+	settingScopeParagraph: string;
+	settingScopeSentence: string;
+	settingScopeEntireText: string;
 	settingJlptHeading: string;
 	settingJlptDesc: string;
 	settingJlptLevel: (level: string) => string;
@@ -37,6 +43,14 @@ const en: Translations = {
 	settingLanguageOptJa: "日本語",
 	settingReloadNotice:
 		"Plugin language updated. Please reload Obsidian for the changes to take full effect in the command palette and menus.",
+
+	settingScopeHeading: "Furigana generation scope",
+	settingScopeDesc:
+		"Choose the scope where furigana will be added. A smaller scope can improve performance in large documents.",
+	settingScopeAll: "Every occurance",
+	settingScopeSentence: "First occurance in each sentence",
+	settingScopeParagraph: "First occurance  in each paragraph",
+	settingScopeEntireText: "First occurance in the entire target text",
 
 	settingJlptHeading: "JLPT Filtering",
 	settingJlptDesc:
@@ -61,6 +75,14 @@ const ja: Translations = {
 	settingLanguageOptJa: "日本語",
 	settingReloadNotice:
 		"プラグインの言語を更新しました。コマンドパレットやメニューに完全に反映させるには、Obsidianをリロードしてください。",
+
+	settingScopeHeading: "最初の漢字だけにふりがなをつける",
+	settingScopeDesc:
+		"どの範囲でふりがなをつけるかを選びます。範囲を小さくすると、大きなドキュメントでも動作が軽くなります。",
+	settingScopeAll: "すべての漢字",
+	settingScopeSentence: "文の最初の漢字",
+	settingScopeParagraph: "段落の最初の漢字",
+	settingScopeEntireText: "最初の出現のみ",
 
 	settingJlptHeading: "JLPTフィルター",
 	settingJlptDesc:

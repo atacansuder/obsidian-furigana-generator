@@ -75,6 +75,7 @@ export class FuriganaService {
 
 		const tokens = this.tokenizer.tokenize(textWithPlaceholders);
 		const kanjiRegex: RegExp = /[一-龯]/u;
+		console.log(tokens);
 		let processedText = tokens
 			.map((token) => {
 				const surface = token.surface_form;
