@@ -1,12 +1,22 @@
 import { FuriganaService } from "furigana-service";
-import { Editor, Notice, Plugin, FileSystemAdapter } from "obsidian";
+import {
+	App,
+	Editor,
+	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	FileSystemAdapter,
+} from "obsidian";
+import { getLangStrings } from "./lang/translations";
+import { LanguageSetting } from "lib/types";
 
 interface FuriganaGeneratorPluginSettings {
-	mySetting: string;
+	language: LanguageSetting;
 }
 
 const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
-	mySetting: "default",
+	language: "auto",
 };
 
 export default class ObsidianFuriganaGenerator extends Plugin {
@@ -16,6 +26,9 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
+		const t = getLangStrings(this.settings.language);
+		this.addSettingTab(new FuriganaSettingTab(this.app, this));
+
 		const adapter = this.app.vault.adapter;
 		if (adapter instanceof FileSystemAdapter) {
 			const pluginBasePath = adapter.getFullPath(this.manifest.dir!);
@@ -23,75 +36,37 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			this.furiganaService = new FuriganaService(pluginBasePath);
 			await this.furiganaService.initialize();
 		} else {
-			new Notice(
-				"Furigana Generator plugin requires a local filesystem and is not supported on this platform."
-			);
+			new Notice(t.fsNotSupported);
 			return;
 		}
 
 		this.addCommand({
 			id: "add-furigana-to-selected-text",
-			name: "Add furigana to selected text",
+			name: t.addFuriganaSelection,
 			editorCallback: async (editor: Editor) => {
 				await this.addFuriganaToSelection(editor);
 			},
 		});
 
-		this.registerEvent(
-			this.app.workspace.on("editor-menu", (menu, editor) => {
-				menu.addItem((item) => {
-					item.setTitle("Add furigana to selection")
-						.setIcon("japanese-yen")
-						.onClick(async () => {
-							await this.addFuriganaToSelection(editor);
-						});
-				});
-			})
-		);
-
 		this.addCommand({
 			id: "remove-furigana-from-selected-text",
-			name: "Remove furigana from selected text",
+			name: t.removeFuriganaSelection,
 			editorCallback: async (editor: Editor) => {
 				await this.removeFuriganaFromSelection(editor);
 			},
 		});
 
-		this.registerEvent(
-			this.app.workspace.on("editor-menu", (menu, editor) => {
-				menu.addItem((item) => {
-					item.setTitle("Remove furigana from selection")
-						.setIcon("japanese-yen")
-						.onClick(async () => {
-							await this.removeFuriganaFromSelection(editor);
-						});
-				});
-			})
-		);
-
 		this.addCommand({
 			id: "add-furigana-to-entire-document",
-			name: "Add furigana to entire document",
+			name: t.addFuriganaDocument,
 			editorCallback: async (editor: Editor) => {
 				await this.addFuriganaToDocument(editor);
 			},
 		});
 
-		this.registerEvent(
-			this.app.workspace.on("editor-menu", (menu, editor) => {
-				menu.addItem((item) => {
-					item.setTitle("Add  furigana to document")
-						.setIcon("japanese-yen")
-						.onClick(async () => {
-							await this.addFuriganaToDocument(editor);
-						});
-				});
-			})
-		);
-
 		this.addCommand({
 			id: "remove-furigana-from-entire-document",
-			name: "Remove furigana from entire document",
+			name: t.removeFuriganaDocument,
 			editorCallback: async (editor: Editor) => {
 				await this.removeFuriganaFromDocument(editor);
 			},
@@ -100,7 +75,28 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor) => {
 				menu.addItem((item) => {
-					item.setTitle("Remove furigana from document")
+					item.setTitle(t.addFuriganaSelection)
+						.setIcon("japanese-yen")
+						.onClick(async () => {
+							await this.addFuriganaToSelection(editor);
+						});
+				});
+				menu.addItem((item) => {
+					item.setTitle(t.removeFuriganaSelection)
+						.setIcon("japanese-yen")
+						.onClick(async () => {
+							await this.removeFuriganaFromSelection(editor);
+						});
+				});
+				menu.addItem((item) => {
+					item.setTitle(t.addFuriganaDocument)
+						.setIcon("japanese-yen")
+						.onClick(async () => {
+							await this.addFuriganaToDocument(editor);
+						});
+				});
+				menu.addItem((item) => {
+					item.setTitle(t.removeFuriganaDocument)
 						.setIcon("japanese-yen")
 						.onClick(async () => {
 							await this.removeFuriganaFromDocument(editor);
@@ -151,5 +147,38 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		const contentWithoutFurigana =
 			await this.furiganaService.removeFurigana(content);
 		editor.setValue(contentWithoutFurigana);
+	}
+}
+
+class FuriganaSettingTab extends PluginSettingTab {
+	plugin: ObsidianFuriganaGenerator;
+
+	constructor(app: App, plugin: ObsidianFuriganaGenerator) {
+		super(app, plugin);
+		this.plugin = plugin;
+	}
+
+	display(): void {
+		const { containerEl } = this;
+		containerEl.empty();
+
+		const t = getLangStrings(this.plugin.settings.language);
+
+		new Setting(containerEl)
+			.setName(t.settingLanguage)
+			.setDesc(t.settingLanguageDesc)
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("auto", t.settingLanguageOptAuto)
+					.addOption("en", t.settingLanguageOptEn)
+					.addOption("ja", t.settingLanguageOptJa)
+					.setValue(this.plugin.settings.language)
+					.onChange(async (value: LanguageSetting) => {
+						this.plugin.settings.language = value;
+						await this.plugin.saveSettings();
+						new Notice(t.settingReloadNotice);
+						this.display();
+					});
+			});
 	}
 }
