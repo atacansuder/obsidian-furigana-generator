@@ -178,7 +178,60 @@ export class FuriganaService {
 					seenWords.add(surface);
 				}
 
-				return `<ruby>${surface}<rt>${hiraganaReading}</rt></ruby>`;
+				let result = "";
+				let surfaceIndex = 0;
+				let readingIndex = 0;
+				while (surfaceIndex < surface.length) {
+					if (wanakana.isKanji(surface[surfaceIndex])) {
+						let kanjiSequence = "";
+						while (
+							surfaceIndex < surface.length &&
+							wanakana.isKanji(surface[surfaceIndex])
+						) {
+							kanjiSequence += surface[surfaceIndex];
+							surfaceIndex++;
+						}
+
+						let hiraganaPart = "";
+						// Find the corresponding reading part for the kanji sequence
+						let tempReadingIndex = readingIndex;
+						let nextKanaIndex = -1;
+
+						if (surfaceIndex < surface.length) {
+							const nextKana = surface[surfaceIndex];
+							nextKanaIndex = hiraganaReading.indexOf(
+								nextKana,
+								tempReadingIndex
+							);
+						}
+
+						if (nextKanaIndex !== -1) {
+							hiraganaPart = hiraganaReading.substring(
+								readingIndex,
+								nextKanaIndex
+							);
+							readingIndex = nextKanaIndex;
+						} else {
+							hiraganaPart =
+								hiraganaReading.substring(readingIndex);
+							readingIndex = hiraganaReading.length;
+						}
+
+						if (kanjiSequence !== hiraganaPart) {
+							result += `<ruby>${kanjiSequence}<rt>${hiraganaPart}</rt></ruby>`;
+						} else {
+							result += kanjiSequence;
+						}
+					} else {
+						const char = surface[surfaceIndex];
+						result += char;
+						if (hiraganaReading[readingIndex] === char) {
+							readingIndex++;
+						}
+						surfaceIndex++;
+					}
+				}
+				return result;
 			})
 			.join("");
 
