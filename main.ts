@@ -91,20 +91,22 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor) => {
-				menu.addItem((item) => {
-					item.setTitle(t.addFuriganaSelection)
-						.setIcon("japanese-yen")
-						.onClick(async () => {
-							await this.addFuriganaToSelection(editor);
-						});
-				});
-				menu.addItem((item) => {
-					item.setTitle(t.removeFuriganaSelection)
-						.setIcon("japanese-yen")
-						.onClick(async () => {
-							await this.removeFuriganaFromSelection(editor);
-						});
-				});
+				if (editor.getSelection()) {
+					menu.addItem((item) => {
+						item.setTitle(t.addFuriganaSelection)
+							.setIcon("japanese-yen")
+							.onClick(async () => {
+								await this.addFuriganaToSelection(editor);
+							});
+					});
+					menu.addItem((item) => {
+						item.setTitle(t.removeFuriganaSelection)
+							.setIcon("japanese-yen")
+							.onClick(async () => {
+								await this.removeFuriganaFromSelection(editor);
+							});
+					});
+				}
 				menu.addItem((item) => {
 					item.setTitle(t.addFuriganaDocument)
 						.setIcon("japanese-yen")
