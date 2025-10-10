@@ -1,4 +1,4 @@
-import { FuriganaService } from "furigana-service";
+import { FuriganaService } from "src/furigana-service";
 import {
 	App,
 	Editor,
@@ -8,6 +8,7 @@ import {
 	Setting,
 	FileSystemAdapter,
 	TextAreaComponent,
+	Modal,
 } from "obsidian";
 import { getLangStrings } from "./lang/translations";
 import { FirstInstanceScope, LanguageSetting } from "lib/types";
@@ -94,6 +95,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor) => {
 				if (!this.settings.showInContextMenu) return;
+				menu.addSeparator();
 				if (editor.getSelection()) {
 					menu.addItem((item) => {
 						item.setTitle(t.addFuriganaSelection)
@@ -107,6 +109,13 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 							.setIcon("minus")
 							.onClick(async () => {
 								await this.removeFuriganaFromSelection(editor);
+							});
+					});
+					menu.addItem((item) => {
+						item.setTitle("Exclude kanjis...")
+							.setIcon("save")
+							.onClick(async () => {
+								await this.addKanjisToExclusionList(editor);
 							});
 					});
 				} else {
@@ -180,6 +189,84 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		const contentWithoutFurigana =
 			await this.furiganaService.removeFurigana(content);
 		editor.setValue(contentWithoutFurigana);
+	}
+
+	async addKanjisToExclusionList(editor: Editor) {
+		const selection = editor.getSelection();
+		if (!selection) return;
+
+		const extractedKanjis = await this.furiganaService.extractKanjis(
+			selection
+		);
+		const uniqueKanjis = [...new Set(extractedKanjis)];
+
+		// Filter existing kanjis
+		const existingExclusions = new Set(this.settings.customExclusionList);
+		const kanjisToAdd = uniqueKanjis.filter(
+			(kanji) => !existingExclusions.has(kanji)
+		);
+
+		if (kanjisToAdd.length === 0) {
+			new Notice("No new kanjis found to add to the exclusion list.");
+			return;
+		}
+
+		this.settings.customExclusionList =
+			this.settings.customExclusionList.concat(kanjisToAdd);
+		await this.saveSettings();
+		new KanjisExclusionModal(this.app, kanjisToAdd, () => {
+			new Notice("Kanjis have been saved.");
+		}).open();
+	}
+}
+
+class KanjisExclusionModal extends Modal {
+	kanjis: string[];
+	onSubmit: () => void;
+	private textArea: TextAreaComponent;
+
+	constructor(app: App, kanjis: string[], onSubmit: () => void) {
+		super(app);
+		this.kanjis = kanjis;
+		this.onSubmit = onSubmit;
+	}
+
+	onOpen() {
+		const { contentEl } = this;
+
+		contentEl.createEl("h2", { text: "Add Kanjis to Exclusion List" });
+		contentEl.createEl("p", {
+			text: "The following new kanjis were found. Review and confirm to add them to the custom exclusion list.",
+		});
+
+		new Setting(contentEl).setName("Kanjis to add").addTextArea((text) => {
+			this.textArea = text;
+			text.setValue(this.kanjis.join("\n")).inputEl.setCssStyles({
+				width: "100%",
+				minHeight: "120px",
+			});
+		});
+
+		new Setting(contentEl)
+			.addButton((btn) =>
+				btn
+					.setButtonText("Confirm")
+					.setCta()
+					.onClick(() => {
+						this.onSubmit();
+						this.close();
+					})
+			)
+			.addButton((btn) =>
+				btn.setButtonText("Cancel").onClick(() => {
+					this.close();
+				})
+			);
+	}
+
+	onClose() {
+		const { contentEl } = this;
+		contentEl.empty();
 	}
 }
 

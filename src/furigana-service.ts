@@ -125,6 +125,22 @@ export class FuriganaService {
 		return text.replace(furiganaRegex, "$1");
 	}
 
+	public async extractKanjis(text: string): Promise<string[]> {
+		if (!this.tokenizer) {
+			new Notice(
+				"Furigana generator is not ready, please wait for the plugin to load."
+			);
+			return [];
+		}
+		const tokens = this.tokenizer?.tokenize(text);
+		const kanjis = tokens.flatMap((token) =>
+			/[一-龯]/u.test(token.basic_form) ? [token.basic_form] : []
+		);
+
+		console.log(kanjis);
+		return kanjis;
+	}
+
 	private processText(
 		text: string,
 		jlptLevelsToInclude: JlptLevelsToInclude,
