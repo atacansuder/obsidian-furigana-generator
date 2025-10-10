@@ -39,10 +39,24 @@ export class FuriganaService {
 		jlptLevelsToInclude: JlptLevelsToInclude,
 		scope: FirstInstanceScope
 	): Promise<string> {
+		const placeholders: string[] = [];
+		const exclusionRegex =
+			/(<ruby>.*?<\/rt><\/ruby>|\[\[.*?\]\]|\[.*?\]\(.*?\)|`[^`]*`|```[\s\S]*?```)/g;
+		let placeholderIndex = 0;
+
+		const textWithPlaceholders = text.replace(exclusionRegex, (match) => {
+			const placeholder = `__EXCLUDED_PLACEHOLDER_${placeholderIndex}__`;
+			placeholders[placeholderIndex] = match;
+			placeholderIndex++;
+			return placeholder;
+		});
+
+		let processedText: string;
+
 		switch (scope) {
 			case "PARAGRAPH":
-				const paragraphs = text.split("\n");
-				return paragraphs
+				const paragraphs = textWithPlaceholders.split("\n");
+				processedText = paragraphs
 					.map((paragraph) => {
 						const seenInParagraph = new Set<string>();
 						return this.processText(
@@ -53,10 +67,11 @@ export class FuriganaService {
 						);
 					})
 					.join("\n");
+				break;
 			case "SENTENCE":
-				const paragraphSeparated = text.split("\n");
+				const paragraphSeparated = textWithPlaceholders.split("\n");
 				const sentenceRegex = /(?<=[。！？])/g;
-				return paragraphSeparated
+				processedText = paragraphSeparated
 					.map((paragraph) => {
 						const sentences = paragraph.split(sentenceRegex);
 						return sentences
@@ -73,17 +88,26 @@ export class FuriganaService {
 							.join("");
 					})
 					.join("\n");
+				break;
 			case "ENTIRE_TEXT":
 			case "ALL":
 			default:
 				const seenWords = new Set<string>();
-				return this.processText(
-					text,
+				processedText = this.processText(
+					textWithPlaceholders,
 					jlptLevelsToInclude,
 					scope,
 					seenWords
 				);
+				break;
 		}
+
+		placeholders.forEach((originalTag, index) => {
+			const placeholder = `__EXCLUDED_PLACEHOLDER_${index}__`;
+			processedText = processedText.replace(placeholder, originalTag);
+		});
+
+		return processedText;
 	}
 
 	public async removeFurigana(text: string): Promise<string> {
@@ -121,23 +145,10 @@ export class FuriganaService {
 			}
 		}
 
-		const placeholders: string[] = [];
-		// Regex to find existing ruby tags and both Obsidian and Markdown links
-		const exclusionRegex =
-			/(<ruby>.*?<\/rt><\/ruby>|\[\[.*?\]\]|\[.*?\]\(.*?\))/g;
-		let placeholderIndex = 0;
-
-		const textWithPlaceholders = text.replace(exclusionRegex, (match) => {
-			const placeholder = `__EXCLUDED_PLACEHOLDER_${placeholderIndex}__`;
-			placeholders[placeholderIndex] = match;
-			placeholderIndex++;
-			return placeholder;
-		});
-
-		const tokens = this.tokenizer.tokenize(textWithPlaceholders);
+		const tokens = this.tokenizer.tokenize(text);
 		const kanjiRegex: RegExp = /[一-龯]/u;
 
-		let processedText = tokens
+		return tokens
 			.map((token) => {
 				const surface = token.surface_form;
 
@@ -236,12 +247,5 @@ export class FuriganaService {
 				return result;
 			})
 			.join("");
-
-		placeholders.forEach((originalTag, index) => {
-			const placeholder = `__EXCLUDED_PLACEHOLDER_${index}__`;
-			processedText = processedText.replace(placeholder, originalTag);
-		});
-
-		return processedText;
 	}
 }
