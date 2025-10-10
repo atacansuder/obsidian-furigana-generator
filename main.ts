@@ -15,12 +15,14 @@ import { JlptLevelsToInclude } from "lib/types";
 interface FuriganaGeneratorPluginSettings {
 	language: LanguageSetting;
 	scope: FirstInstanceScope;
+	excludeHeadings: boolean;
 	jlptLevelsToInclude: JlptLevelsToInclude;
 }
 
 const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	language: "auto",
 	scope: "ALL",
+	excludeHeadings: true,
 	jlptLevelsToInclude: {
 		n5: true,
 		n4: true,
@@ -137,7 +139,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			await this.furiganaService.generateFurigana(
 				selection,
 				this.settings.jlptLevelsToInclude,
-				this.settings.scope
+				this.settings.scope,
+				this.settings.excludeHeadings
 			);
 		editor.replaceSelection(selectionWithFurigana);
 	}
@@ -147,7 +150,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		const contentWithFurigana = await this.furiganaService.generateFurigana(
 			content,
 			this.settings.jlptLevelsToInclude,
-			this.settings.scope
+			this.settings.scope,
+			this.settings.excludeHeadings
 		);
 		editor.setValue(contentWithFurigana);
 	}
@@ -214,6 +218,29 @@ class FuriganaSettingTab extends PluginSettingTab {
 						this.display();
 					});
 			});
+
+		const excludeHeadingsSetting = new Setting(containerEl)
+			.setName(t.settingExcludeHeadingsHeading)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.excludeHeadings)
+					.onChange(async (value) => {
+						this.plugin.settings.excludeHeadings = value;
+						await this.plugin.saveSettings();
+						this.display();
+					});
+			});
+
+		excludeHeadingsSetting.descEl.appendText(
+			t.settingExcludeHeadingsDescPart1
+		);
+		excludeHeadingsSetting.descEl.createEl("a", {
+			text: t.settingExcludeHeadingsDescLink,
+			href: "https://help.obsidian.md/links#Link+to+a+heading+in+a+note",
+		});
+		excludeHeadingsSetting.descEl.appendText(
+			t.settingExcludeHeadingsDescPart2
+		);
 
 		new Setting(containerEl)
 			.setHeading()

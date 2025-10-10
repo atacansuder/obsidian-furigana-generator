@@ -16,12 +16,19 @@ interface Translations {
 	settingLanguageOptEn: string;
 	settingLanguageOptJa: string;
 	settingReloadNotice: string;
+
 	settingScopeHeading: string;
 	settingScopeDesc: string;
 	settingScopeAll: string;
 	settingScopeParagraph: string;
 	settingScopeSentence: string;
 	settingScopeEntireText: string;
+
+	settingExcludeHeadingsHeading: string;
+	settingExcludeHeadingsDescPart1: string;
+	settingExcludeHeadingsDescLink: string;
+	settingExcludeHeadingsDescPart2: string;
+
 	settingJlptHeading: string;
 	settingJlptDesc: string;
 	settingJlptLevel: (level: string) => string;
@@ -51,6 +58,12 @@ const en: Translations = {
 	settingScopeSentence: "First occurance in each sentence",
 	settingScopeParagraph: "First occurance  in each paragraph",
 	settingScopeEntireText: "First occurance in the entire target text",
+
+	settingExcludeHeadingsHeading: "Exclude headings",
+	settingExcludeHeadingsDescPart1:
+		"If enabled, headings will be excluded from furigana generation. Be careful when deactivating this, since this can cause problems for ",
+	settingExcludeHeadingsDescLink: "links to headings",
+	settingExcludeHeadingsDescPart2: ".",
 
 	settingJlptHeading: "JLPT Filtering",
 	settingJlptDesc:
@@ -83,6 +96,13 @@ const ja: Translations = {
 	settingScopeSentence: "文の最初の漢字",
 	settingScopeParagraph: "段落の最初の漢字",
 	settingScopeEntireText: "最初の出現のみ",
+
+	settingExcludeHeadingsHeading: "見出しを除外",
+	settingExcludeHeadingsDescPart1:
+		"有効にすると、見出し部分にはふりがなが生成されません。無効にすると、",
+	settingExcludeHeadingsDescLink: "見出しへのリンク",
+	settingExcludeHeadingsDescPart2:
+		"が正しく動作しなくなる可能性があるので注意してください。",
 
 	settingJlptHeading: "JLPTフィルター",
 	settingJlptDesc:

@@ -37,11 +37,16 @@ export class FuriganaService {
 	public async generateFurigana(
 		text: string,
 		jlptLevelsToInclude: JlptLevelsToInclude,
-		scope: FirstInstanceScope
+		scope: FirstInstanceScope,
+		excludeHeadings: boolean
 	): Promise<string> {
 		const placeholders: string[] = [];
-		const exclusionRegex =
-			/(<ruby>.*?<\/rt><\/ruby>|\[\[.*?\]\]|\[.*?\]\(.*?\)|`[^`]*`|```[\s\S]*?```)/g;
+
+		const headingPattern = excludeHeadings ? "|(?:^|\\n)#{1,6} .+$" : "";
+		const exclusionRegex = new RegExp(
+			`(<ruby>.*?<\\/rt><\\/ruby>|\\[\\[.*?\\]\\]|\\[.*?\\]\\(.*?\\)|#\\S+|\`[^\`]*\`|\`\`\`[\\s\\S]*?\`\`\`${headingPattern})`,
+			"gm"
+		);
 		let placeholderIndex = 0;
 
 		const textWithPlaceholders = text.replace(exclusionRegex, (match) => {
