@@ -110,7 +110,7 @@ const en: Translations = {
 	excludeKanjisModalLabel: "Kanjis to add",
 	excludeKanjisModalConfirm: "Confirm",
 	excludeKanjisModalCancel: "Cancel",
-	excludeKanjisCommand: "Exclude kanjis...",
+	excludeKanjisCommand: "Mark kanjis to exclude...",
 	excludeKanjisNoNew: "No new kanjis found to add to the exclusion list.",
 	excludeKanjisSaved: "Kanjis have been saved.",
 	excludeKanjiRemoveFuriganaToggle:
@@ -173,7 +173,7 @@ const ja: Translations = {
 	excludeKanjisModalLabel: "追加する漢字",
 	excludeKanjisModalConfirm: "確認",
 	excludeKanjisModalCancel: "キャンセル",
-	excludeKanjisCommand: "漢字を除外...",
+	excludeKanjisCommand: "除外漢字として登録...",
 	excludeKanjisNoNew:
 		"除外リストに追加する新しい漢字が見つかりませんでした。",
 	excludeKanjisSaved: "漢字が保存されました。",
