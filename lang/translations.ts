@@ -28,6 +28,7 @@ interface Translations {
 	settingExcludeHeadingsDescPart1: string;
 	settingExcludeHeadingsDescLink: string;
 	settingExcludeHeadingsDescPart2: string;
+	settingExcludeHeadingsLink: string;
 
 	settingJlptHeading: string;
 	settingJlptDesc: string;
@@ -64,6 +65,8 @@ const en: Translations = {
 		"If enabled, headings will be excluded from furigana generation. Be careful when deactivating this, since this can cause problems for ",
 	settingExcludeHeadingsDescLink: "links to headings",
 	settingExcludeHeadingsDescPart2: ".",
+	settingExcludeHeadingsLink:
+		"https://help.obsidian.md/links#Link+to+a+heading+in+a+note",
 
 	settingJlptHeading: "JLPT Filtering",
 	settingJlptDesc:
@@ -103,6 +106,8 @@ const ja: Translations = {
 	settingExcludeHeadingsDescLink: "見出しへのリンク",
 	settingExcludeHeadingsDescPart2:
 		"が正しく動作しなくなる可能性があるので注意してください。",
+	settingExcludeHeadingsLink:
+		"https://publish.obsidian.md/help-ja/%E3%82%AC%E3%82%A4%E3%83%89/%E5%86%85%E9%83%A8%E3%83%AA%E3%83%B3%E3%82%AF#%E8%A6%8B%E5%87%BA%E3%81%97%E3%81%B8%E3%81%AE%E3%83%AA%E3%83%B3%E3%82%AF",
 
 	settingJlptHeading: "JLPTフィルター",
 	settingJlptDesc:

@@ -236,7 +236,7 @@ class FuriganaSettingTab extends PluginSettingTab {
 		);
 		excludeHeadingsSetting.descEl.createEl("a", {
 			text: t.settingExcludeHeadingsDescLink,
-			href: "https://help.obsidian.md/links#Link+to+a+heading+in+a+note",
+			href: t.settingExcludeHeadingsLink,
 		});
 		excludeHeadingsSetting.descEl.appendText(
 			t.settingExcludeHeadingsDescPart2
