@@ -44,8 +44,9 @@ export class FuriganaService {
 		const placeholders: string[] = [];
 
 		const headingPattern = excludeHeadings ? "|(?:^|\\n)#{1,6} .+$" : "";
+		// Existing ruby tags, external and internal links, code blocks, file properties, headings (optional)
 		const exclusionRegex = new RegExp(
-			`(<ruby>.*?<\\/rt><\\/ruby>|\\[\\[.*?\\]\\]|\\[.*?\\]\\(.*?\\)|#\\S+|\`[^\`]*\`|\`\`\`[\\s\\S]*?\`\`\`${headingPattern})`,
+			`(<ruby>.*?<\\/rt><\\/ruby>|\\[\\[.*?\\]\\]|\\[.*?\\]\\(.*?\\)|#\\S+|\`[^\`]*\`|\`\`\`[\\s\\S]*?\`\`\`|(?:^|\\n)---\\n[\\s\\S]*?\\n---${headingPattern})`,
 			"gm"
 		);
 		let placeholderIndex = 0;
