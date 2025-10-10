@@ -62,6 +62,14 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			},
 		});
 
+		this.addCommand({
+			id: "add-kanjis-to-exclusion-list",
+			name: t.excludeKanjisCommand,
+			editorCallback: async (editor: Editor) => {
+				await this.addKanjisToExclusionList(editor);
+			},
+		});
+
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor) => {
 				if (!this.settings.showInContextMenu) return;
@@ -164,9 +172,12 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 	async addKanjisToExclusionList(editor: Editor) {
 		const selection = editor.getSelection();
-		if (!selection) return;
-
 		const t = getLangStrings(this.settings.language);
+
+		if (!selection) {
+			new Notice(t.excludeKanjisNoNew);
+			return;
+		}
 
 		const extractedKanjis = await this.furiganaService.extractKanjis(
 			selection
