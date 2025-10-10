@@ -41,6 +41,16 @@ interface Translations {
 	settingCustomExclusionName: string;
 	settingCustomExclusionDesc: string;
 	settingCustomExclusionPlaceholder: string;
+
+	// Kanji Exclusion Modal
+	excludeKanjisModalTitle: string;
+	excludeKanjisModalDesc: string;
+	excludeKanjisModalLabel: string;
+	excludeKanjisModalConfirm: string;
+	excludeKanjisModalCancel: string;
+	excludeKanjisCommand: string;
+	excludeKanjisNoNew: string;
+	excludeKanjisSaved: string;
 }
 
 const en: Translations = {
@@ -92,6 +102,16 @@ const en: Translations = {
 	settingCustomExclusionDesc:
 		"Add words here to exclude them from furigana generation. Please add one word per line. Verbs must be in their basic (dictionary) form.",
 	settingCustomExclusionPlaceholder: "e.g.\n日本語\n食べる\n字",
+
+	excludeKanjisModalTitle: "Add Kanjis to Exclusion List",
+	excludeKanjisModalDesc:
+		"The following new kanjis were found. Review and confirm to add them to the custom exclusion list.",
+	excludeKanjisModalLabel: "Kanjis to add",
+	excludeKanjisModalConfirm: "Confirm",
+	excludeKanjisModalCancel: "Cancel",
+	excludeKanjisCommand: "Exclude kanjis...",
+	excludeKanjisNoNew: "No new kanjis found to add to the exclusion list.",
+	excludeKanjisSaved: "Kanjis have been saved.",
 };
 
 const ja: Translations = {
@@ -143,6 +163,17 @@ const ja: Translations = {
 	settingCustomExclusionDesc:
 		"ふりがな生成から除外する単語を、1行に1つずつ入力してください。動詞は必ず辞書形で指定します。",
 	settingCustomExclusionPlaceholder: "例:\n日本語\n食べる\n字",
+
+	excludeKanjisModalTitle: "除外リストに漢字を追加",
+	excludeKanjisModalDesc:
+		"以下の新しい漢字が見つかりました。確認してカスタム除外リストに追加してください。",
+	excludeKanjisModalLabel: "追加する漢字",
+	excludeKanjisModalConfirm: "確認",
+	excludeKanjisModalCancel: "キャンセル",
+	excludeKanjisCommand: "漢字を除外...",
+	excludeKanjisNoNew:
+		"除外リストに追加する新しい漢字が見つかりませんでした。",
+	excludeKanjisSaved: "漢字が保存されました。",
 };
 
 const localizations: Record<string, Translations> = {

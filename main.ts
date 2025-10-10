@@ -65,6 +65,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor) => {
 				if (!this.settings.showInContextMenu) return;
+				const t = getLangStrings(this.settings.language);
 				menu.addSeparator();
 				if (editor.getSelection()) {
 					menu.addItem((item) => {
@@ -82,7 +83,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 							});
 					});
 					menu.addItem((item) => {
-						item.setTitle("Exclude kanjis...")
+						item.setTitle(t.excludeKanjisCommand)
 							.setIcon("save")
 							.onClick(async () => {
 								await this.addKanjisToExclusionList(editor);
@@ -165,6 +166,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		const selection = editor.getSelection();
 		if (!selection) return;
 
+		const t = getLangStrings(this.settings.language);
+
 		const extractedKanjis = await this.furiganaService.extractKanjis(
 			selection
 		);
@@ -177,15 +180,15 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		);
 
 		if (kanjisToAdd.length === 0) {
-			new Notice("No new kanjis found to add to the exclusion list.");
+			new Notice(t.excludeKanjisNoNew);
 			return;
 		}
 
-		this.settings.customExclusionList =
-			this.settings.customExclusionList.concat(kanjisToAdd);
-		await this.saveSettings();
-		new KanjisExclusionModal(this.app, kanjisToAdd, () => {
-			new Notice("Kanjis have been saved.");
+		new KanjisExclusionModal(this.app, this, kanjisToAdd, async () => {
+			this.settings.customExclusionList =
+				this.settings.customExclusionList.concat(kanjisToAdd);
+			await this.saveSettings();
+			new Notice(t.excludeKanjisSaved);
 		}).open();
 	}
 }

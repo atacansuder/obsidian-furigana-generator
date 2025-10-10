@@ -42,33 +42,43 @@ export class KanjisExclusionModal extends Modal {
 	kanjis: string[];
 	onSubmit: () => void;
 	private textArea: TextAreaComponent;
+	plugin: ObsidianFuriganaGenerator;
 
-	constructor(app: App, kanjis: string[], onSubmit: () => void) {
+	constructor(
+		app: App,
+		plugin: ObsidianFuriganaGenerator,
+		kanjis: string[],
+		onSubmit: () => void
+	) {
 		super(app);
+		this.plugin = plugin;
 		this.kanjis = kanjis;
 		this.onSubmit = onSubmit;
 	}
 
 	onOpen() {
 		const { contentEl } = this;
+		const t = getLangStrings(this.plugin.settings.language);
 
-		contentEl.createEl("h2", { text: "Add Kanjis to Exclusion List" });
+		contentEl.createEl("h2", { text: t.excludeKanjisModalTitle });
 		contentEl.createEl("p", {
-			text: "The following new kanjis were found. Review and confirm to add them to the custom exclusion list.",
+			text: t.excludeKanjisModalDesc,
 		});
 
-		new Setting(contentEl).setName("Kanjis to add").addTextArea((text) => {
-			this.textArea = text;
-			text.setValue(this.kanjis.join("\n")).inputEl.setCssStyles({
-				width: "100%",
-				minHeight: "120px",
+		new Setting(contentEl)
+			.setName(t.excludeKanjisModalLabel)
+			.addTextArea((text) => {
+				this.textArea = text;
+				text.setValue(this.kanjis.join("\n")).inputEl.setCssStyles({
+					width: "100%",
+					minHeight: "120px",
+				});
 			});
-		});
 
 		new Setting(contentEl)
 			.addButton((btn) =>
 				btn
-					.setButtonText("Confirm")
+					.setButtonText(t.excludeKanjisModalConfirm)
 					.setCta()
 					.onClick(() => {
 						this.onSubmit();
@@ -76,7 +86,7 @@ export class KanjisExclusionModal extends Modal {
 					})
 			)
 			.addButton((btn) =>
-				btn.setButtonText("Cancel").onClick(() => {
+				btn.setButtonText(t.excludeKanjisModalCancel).onClick(() => {
 					this.close();
 				})
 			);
