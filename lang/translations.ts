@@ -52,6 +52,12 @@ interface Translations {
 	excludeKanjisNoNew: string;
 	excludeKanjisSaved: string;
 	excludeKanjiRemoveFuriganaToggle: string;
+
+	// Syntax Warning
+	settingSyntaxWarningHeading: string;
+	settingSyntaxWarningDescPart1: string;
+	settingSyntaxWarningDescPart2: string;
+	settingSyntaxWarningDescPart3: string;
 }
 
 const en: Translations = {
@@ -115,6 +121,12 @@ const en: Translations = {
 	excludeKanjisSaved: "Kanjis have been saved.",
 	excludeKanjiRemoveFuriganaToggle:
 		"Remove furigana from selection after saving.",
+
+	settingSyntaxWarningHeading: "Warning:",
+	settingSyntaxWarningDescPart1:
+		"In order to render syntaxes other than the default ruby syntax, you need other plugins. See ",
+	settingSyntaxWarningDescPart2: " and ",
+	settingSyntaxWarningDescPart3: " plugins for syntax support.",
 };
 
 const ja: Translations = {
@@ -178,6 +190,12 @@ const ja: Translations = {
 		"除外リストに追加する新しい漢字が見つかりませんでした。",
 	excludeKanjisSaved: "漢字が保存されました。",
 	excludeKanjiRemoveFuriganaToggle: "保存後に選択範囲からふりがなを削除する",
+
+	settingSyntaxWarningHeading: "警告：",
+	settingSyntaxWarningDescPart1:
+		"デフォルトのルビ構文以外をレンダリングするには、別途プラグインが必要です。詳しくは ",
+	settingSyntaxWarningDescPart2: " と ",
+	settingSyntaxWarningDescPart3: " を参照してください。",
 };
 
 const localizations: Record<string, Translations> = {

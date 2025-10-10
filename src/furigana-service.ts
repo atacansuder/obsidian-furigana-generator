@@ -3,7 +3,11 @@ import * as wanakana from "wanakana";
 import NodeDictionaryLoader from "@patdx/kuromoji/node";
 import { Notice } from "obsidian";
 
-import { FirstInstanceScope, JlptLevelsToInclude } from "lib/types";
+import {
+	FirstInstanceScope,
+	JlptLevelsToInclude,
+	FuriganaSyntax,
+} from "lib/types";
 import { jlptN5, jlptN4, jlptN3, jlptN2, jlptN1 } from "data/kanji-sets";
 
 type Tokenizer = Awaited<
@@ -39,14 +43,15 @@ export class FuriganaService {
 		jlptLevelsToInclude: JlptLevelsToInclude,
 		scope: FirstInstanceScope,
 		excludeHeadings: boolean,
-		customExclusionList: string[]
+		customExclusionList: string[],
+		syntax: FuriganaSyntax
 	): Promise<string> {
 		const placeholders: string[] = [];
 
 		const headingPattern = excludeHeadings ? "|(?:^|\\n)#{1,6} .+$" : "";
-		// Existing ruby tags, external and internal links, code blocks, file properties, headings (optional)
+		// Existing ruby tags (all formats), external and internal links, code blocks, file properties, headings (optional)
 		const exclusionRegex = new RegExp(
-			`(<ruby>.*?<\\/rt><\\/ruby>|\\[\\[.*?\\]\\]|\\[.*?\\]\\(.*?\\)|#\\S+|\`[^\`]*\`|\`\`\`[\\s\\S]*?\`\`\`|(?:^|\\n)---\\n[\\s\\S]*?\\n---${headingPattern})`,
+			`(<ruby>.*?<\\/rt><\\/ruby>|\\{.*?\\|.*?\\}|.*?《.*?》|\\[\\[.*?\\]\\]|\\[.*?\\]\\(.*?\\)|#\\S+|\`[^\`]*\`|\`\`\`[\\s\\S]*?\`\`\`|(?:^|\\n)---\\n[\\s\\S]*?\\n---${headingPattern})`,
 			"gm"
 		);
 		let placeholderIndex = 0;
@@ -71,7 +76,8 @@ export class FuriganaService {
 							jlptLevelsToInclude,
 							scope,
 							seenInParagraph,
-							customExclusionList
+							customExclusionList,
+							syntax
 						);
 					})
 					.join("\n");
@@ -91,7 +97,8 @@ export class FuriganaService {
 									jlptLevelsToInclude,
 									scope,
 									seenInSentence,
-									customExclusionList
+									customExclusionList,
+									syntax
 								);
 							})
 							.join("");
@@ -107,7 +114,8 @@ export class FuriganaService {
 					jlptLevelsToInclude,
 					scope,
 					seenWords,
-					customExclusionList
+					customExclusionList,
+					syntax
 				);
 				break;
 		}
@@ -121,8 +129,12 @@ export class FuriganaService {
 	}
 
 	public async removeFurigana(text: string): Promise<string> {
-		const furiganaRegex = /<ruby>(.*?)<rt>.*?<\/rt><\/ruby>/g;
-		return text.replace(furiganaRegex, "$1");
+		const furiganaRegex =
+			/<ruby>(.*?)<rt>.*?<\/rt><\/ruby>|\{(.+?)\|.+?\}|(.+?)《.+?》/g;
+		return text.replace(
+			furiganaRegex,
+			(_match, ruby, markdown, novel) => ruby || markdown || novel
+		);
 	}
 
 	public async extractKanjis(text: string): Promise<string[]> {
@@ -146,7 +158,8 @@ export class FuriganaService {
 		jlptLevelsToInclude: JlptLevelsToInclude,
 		scope: FirstInstanceScope,
 		seenWords: Set<string>,
-		customExclusionList: string[]
+		customExclusionList: string[],
+		syntax: FuriganaSyntax
 	): string {
 		if (!this.tokenizer) {
 			new Notice(
@@ -269,7 +282,18 @@ export class FuriganaService {
 						}
 
 						if (kanjiSequence !== hiraganaPart) {
-							result += `<ruby>${kanjiSequence}<rt>${hiraganaPart}</rt></ruby>`;
+							switch (syntax) {
+								case "MARKDOWN":
+									result += `{${kanjiSequence}|${hiraganaPart}}`;
+									break;
+								case "JAPANESE-NOVEL":
+									result += `${kanjiSequence}《${hiraganaPart}》`;
+									break;
+								case "RUBY":
+								default:
+									result += `<ruby>${kanjiSequence}<rt>${hiraganaPart}</rt></ruby>`;
+									break;
+							}
 						} else {
 							result += kanjiSequence;
 						}

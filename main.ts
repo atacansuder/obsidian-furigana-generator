@@ -139,7 +139,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 				this.settings.jlptLevelsToInclude,
 				this.settings.scope,
 				this.settings.excludeHeadings,
-				this.settings.customExclusionList
+				this.settings.customExclusionList,
+				this.settings.syntax
 			);
 		editor.replaceSelection(selectionWithFurigana);
 	}
@@ -151,7 +152,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			this.settings.jlptLevelsToInclude,
 			this.settings.scope,
 			this.settings.excludeHeadings,
-			this.settings.customExclusionList
+			this.settings.customExclusionList,
+			this.settings.syntax
 		);
 		editor.setValue(contentWithFurigana);
 	}

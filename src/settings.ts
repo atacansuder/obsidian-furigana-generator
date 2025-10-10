@@ -11,12 +11,14 @@ import {
 	FirstInstanceScope,
 	LanguageSetting,
 	JlptLevelsToInclude,
+	FuriganaSyntax,
 } from "lib/types";
 import ObsidianFuriganaGenerator from "main";
 
 export interface FuriganaGeneratorPluginSettings {
 	language: LanguageSetting;
 	scope: FirstInstanceScope;
+	syntax: FuriganaSyntax;
 	excludeHeadings: boolean;
 	showInContextMenu: boolean;
 	jlptLevelsToInclude: JlptLevelsToInclude;
@@ -26,6 +28,7 @@ export interface FuriganaGeneratorPluginSettings {
 export const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	language: "auto",
 	scope: "ALL",
+	syntax: "RUBY",
 	excludeHeadings: true,
 	showInContextMenu: true,
 	jlptLevelsToInclude: {
@@ -154,6 +157,39 @@ export class GeneralSettingTab extends PluginSettingTab {
 						this.display();
 					});
 			});
+
+		const syntaxSetting = new Setting(containerEl).setName("Syntax");
+
+		syntaxSetting.descEl.appendText(
+			"Select which syntax to use in editing mode for creating furigana."
+		);
+
+		const warningEl = syntaxSetting.descEl.createEl("p");
+		warningEl.createEl("strong", { text: t.settingSyntaxWarningHeading });
+		warningEl.appendText(` ${t.settingSyntaxWarningDescPart1}`);
+		warningEl.createEl("a", {
+			text: "Markdown Furigana",
+			href: "https://github.com/steven-kraft/obsidian-markdown-furigana",
+		});
+		warningEl.appendText(t.settingSyntaxWarningDescPart2);
+		warningEl.createEl("a", {
+			text: "Japanese Novel Ruby",
+			href: "https://github.com/k-quels/japanese-novel-ruby",
+		});
+		warningEl.appendText(t.settingSyntaxWarningDescPart3);
+
+		syntaxSetting.addDropdown((dropdown) => {
+			dropdown
+				.addOption("RUBY", "Ruby")
+				.addOption("MARKDOWN", "Markdown")
+				.addOption("JAPANESE-NOVEL", "Japanese Novel")
+				.setValue(this.plugin.settings.syntax)
+				.onChange(async (value: FuriganaSyntax) => {
+					this.plugin.settings.syntax = value;
+					await this.plugin.saveSettings();
+					this.display();
+				});
+		});
 
 		const excludeHeadingsSetting = new Setting(containerEl)
 			.setName(t.settingExcludeHeadingsHeading)

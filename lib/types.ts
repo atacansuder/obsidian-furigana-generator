@@ -11,3 +11,5 @@ export type FirstInstanceScope =
 	| "PARAGRAPH"
 	| "SENTENCE"
 	| "ALL";
+
+export type FuriganaSyntax = "RUBY" | "MARKDOWN" | "JAPANESE-NOVEL";
