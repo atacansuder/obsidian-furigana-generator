@@ -5,8 +5,8 @@ interface Translations {
 	// Command/Menu
 	addFuriganaSelection: string;
 	removeFuriganaSelection: string;
-	addFuriganaDocument: string;
-	removeFuriganaDocument: string;
+	addFuriganaNote: string;
+	removeFuriganaNote: string;
 	fsNotSupported: string;
 
 	// Settings
@@ -30,6 +30,9 @@ interface Translations {
 	settingExcludeHeadingsDescPart2: string;
 	settingExcludeHeadingsLink: string;
 
+	settingShowInContextMenuHeading: string;
+	settingShowInContextMenuDesc: string;
+
 	settingJlptHeading: string;
 	settingJlptDesc: string;
 	settingJlptLevel: (level: string) => string;
@@ -43,8 +46,9 @@ interface Translations {
 const en: Translations = {
 	addFuriganaSelection: "Add furigana to selection",
 	removeFuriganaSelection: "Remove furigana from selection",
-	addFuriganaDocument: "Add furigana to document",
-	removeFuriganaDocument: "Remove furigana from document",
+	addFuriganaNote: "Add furigana to note",
+	removeFuriganaNote: "Remove furigana from note",
+
 	fsNotSupported:
 		"Furigana Generator plugin requires a local filesystem and is not supported on this platform.",
 
@@ -73,6 +77,10 @@ const en: Translations = {
 	settingExcludeHeadingsLink:
 		"https://help.obsidian.md/links#Link+to+a+heading+in+a+note",
 
+	settingShowInContextMenuHeading: "Show commands in context menu",
+	settingShowInContextMenuDesc:
+		"If enabled, furigana-related commands will also appear in the context menu, in addition to the command palette.",
+
 	settingJlptHeading: "JLPT Filtering",
 	settingJlptDesc:
 		"Toggle off a level to exclude its kanji from Furigana generation.",
@@ -89,8 +97,8 @@ const en: Translations = {
 const ja: Translations = {
 	addFuriganaSelection: "選択範囲にルビを振る",
 	removeFuriganaSelection: "選択範囲のルビを削除",
-	addFuriganaDocument: "ドキュメント全体にルビを振る",
-	removeFuriganaDocument: "ドキュメント全体のルビを削除",
+	addFuriganaNote: "ノート全体にルビを振る",
+	removeFuriganaNote: "ノート全体のルビを削除",
 	fsNotSupported:
 		"Furigana Generatorプラグインはローカルファイルシステムを必要とするため、このプラットフォームではサポートされていません。",
 
@@ -119,6 +127,10 @@ const ja: Translations = {
 		"が正しく動作しなくなる可能性があるので注意してください。",
 	settingExcludeHeadingsLink:
 		"https://publish.obsidian.md/help-ja/%E3%82%AC%E3%82%A4%E3%83%89/%E5%86%85%E9%83%A8%E3%83%AA%E3%83%B3%E3%82%AF#%E8%A6%8B%E5%87%BA%E3%81%97%E3%81%B8%E3%81%AE%E3%83%AA%E3%83%B3%E3%82%AF",
+
+	settingShowInContextMenuHeading: "コンテキストメニューにボタンを追加",
+	settingShowInContextMenuDesc:
+		"有効にすると、ふりがなの追加・削除に関するコマンドが、コマンドパレットに加えてコンテキストメニューにも表示されます。",
 
 	settingJlptHeading: "JLPTフィルター",
 	settingJlptDesc:

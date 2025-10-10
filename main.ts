@@ -17,6 +17,7 @@ interface FuriganaGeneratorPluginSettings {
 	language: LanguageSetting;
 	scope: FirstInstanceScope;
 	excludeHeadings: boolean;
+	showInContextMenu: boolean;
 	jlptLevelsToInclude: JlptLevelsToInclude;
 	customExclusionList: string[];
 }
@@ -25,6 +26,7 @@ const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	language: "auto",
 	scope: "ALL",
 	excludeHeadings: true,
+	showInContextMenu: true,
 	jlptLevelsToInclude: {
 		n5: true,
 		n4: true,
@@ -75,7 +77,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 		this.addCommand({
 			id: "add-furigana-to-entire-document",
-			name: t.addFuriganaDocument,
+			name: t.addFuriganaNote,
 			editorCallback: async (editor: Editor) => {
 				await this.addFuriganaToDocument(editor);
 			},
@@ -83,7 +85,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 		this.addCommand({
 			id: "remove-furigana-from-entire-document",
-			name: t.removeFuriganaDocument,
+			name: t.removeFuriganaNote,
 			editorCallback: async (editor: Editor) => {
 				await this.removeFuriganaFromDocument(editor);
 			},
@@ -91,36 +93,38 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor) => {
+				if (!this.settings.showInContextMenu) return;
 				if (editor.getSelection()) {
 					menu.addItem((item) => {
 						item.setTitle(t.addFuriganaSelection)
-							.setIcon("japanese-yen")
+							.setIcon("plus")
 							.onClick(async () => {
 								await this.addFuriganaToSelection(editor);
 							});
 					});
 					menu.addItem((item) => {
 						item.setTitle(t.removeFuriganaSelection)
-							.setIcon("japanese-yen")
+							.setIcon("minus")
 							.onClick(async () => {
 								await this.removeFuriganaFromSelection(editor);
 							});
 					});
+				} else {
+					menu.addItem((item) => {
+						item.setTitle(t.addFuriganaNote)
+							.setIcon("file-plus")
+							.onClick(async () => {
+								await this.addFuriganaToDocument(editor);
+							});
+					});
+					menu.addItem((item) => {
+						item.setTitle(t.removeFuriganaNote)
+							.setIcon("file-minus")
+							.onClick(async () => {
+								await this.removeFuriganaFromDocument(editor);
+							});
+					});
 				}
-				menu.addItem((item) => {
-					item.setTitle(t.addFuriganaDocument)
-						.setIcon("japanese-yen")
-						.onClick(async () => {
-							await this.addFuriganaToDocument(editor);
-						});
-				});
-				menu.addItem((item) => {
-					item.setTitle(t.removeFuriganaDocument)
-						.setIcon("japanese-yen")
-						.onClick(async () => {
-							await this.removeFuriganaFromDocument(editor);
-						});
-				});
 			})
 		);
 	}
@@ -250,6 +254,18 @@ class GeneralSettingTab extends PluginSettingTab {
 		excludeHeadingsSetting.descEl.appendText(
 			t.settingExcludeHeadingsDescPart2
 		);
+
+		new Setting(containerEl)
+			.setName(t.settingShowInContextMenuHeading)
+			.setDesc(t.settingShowInContextMenuDesc)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.showInContextMenu)
+					.onChange(async (value) => {
+						this.plugin.settings.showInContextMenu = value;
+						await this.plugin.saveSettings();
+					});
+			});
 
 		new Setting(containerEl)
 			.setHeading()
