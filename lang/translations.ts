@@ -51,6 +51,7 @@ interface Translations {
 	excludeKanjisCommand: string;
 	excludeKanjisNoNew: string;
 	excludeKanjisSaved: string;
+	excludeKanjiRemoveFuriganaToggle: string;
 }
 
 const en: Translations = {
@@ -112,6 +113,8 @@ const en: Translations = {
 	excludeKanjisCommand: "Exclude kanjis...",
 	excludeKanjisNoNew: "No new kanjis found to add to the exclusion list.",
 	excludeKanjisSaved: "Kanjis have been saved.",
+	excludeKanjiRemoveFuriganaToggle:
+		"Remove furigana from selection after saving.",
 };
 
 const ja: Translations = {
@@ -174,6 +177,7 @@ const ja: Translations = {
 	excludeKanjisNoNew:
 		"除外リストに追加する新しい漢字が見つかりませんでした。",
 	excludeKanjisSaved: "漢字が保存されました。",
+	excludeKanjiRemoveFuriganaToggle: "保存後に選択範囲からふりがなを削除する",
 };
 
 const localizations: Record<string, Translations> = {

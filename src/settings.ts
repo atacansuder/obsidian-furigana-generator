@@ -40,15 +40,16 @@ export const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 
 export class KanjisExclusionModal extends Modal {
 	kanjis: string[];
-	onSubmit: () => void;
+	onSubmit: (shouldRemoveFurigana: boolean) => void;
 	private textArea: TextAreaComponent;
 	plugin: ObsidianFuriganaGenerator;
+	private shouldRemoveFurigana = true;
 
 	constructor(
 		app: App,
 		plugin: ObsidianFuriganaGenerator,
 		kanjis: string[],
-		onSubmit: () => void
+		onSubmit: (shouldRemoveFurigana: boolean) => void
 	) {
 		super(app);
 		this.plugin = plugin;
@@ -76,12 +77,20 @@ export class KanjisExclusionModal extends Modal {
 			});
 
 		new Setting(contentEl)
+			.setName(t.excludeKanjiRemoveFuriganaToggle)
+			.addToggle((toggle) =>
+				toggle.setValue(this.shouldRemoveFurigana).onChange((value) => {
+					this.shouldRemoveFurigana = value;
+				})
+			);
+
+		new Setting(contentEl)
 			.addButton((btn) =>
 				btn
 					.setButtonText(t.excludeKanjisModalConfirm)
 					.setCta()
 					.onClick(() => {
-						this.onSubmit();
+						this.onSubmit(this.shouldRemoveFurigana);
 						this.close();
 					})
 			)
@@ -109,7 +118,6 @@ export class GeneralSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl("h2", { text: "General Settings" });
 
 		const t = getLangStrings(this.plugin.settings.language);
 

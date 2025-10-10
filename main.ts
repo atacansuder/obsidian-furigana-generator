@@ -184,11 +184,20 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			return;
 		}
 
-		new KanjisExclusionModal(this.app, this, kanjisToAdd, async () => {
-			this.settings.customExclusionList =
-				this.settings.customExclusionList.concat(kanjisToAdd);
-			await this.saveSettings();
-			new Notice(t.excludeKanjisSaved);
-		}).open();
+		new KanjisExclusionModal(
+			this.app,
+			this,
+			kanjisToAdd,
+			async (shouldRemoveFurigana: boolean) => {
+				this.settings.customExclusionList =
+					this.settings.customExclusionList.concat(kanjisToAdd);
+				await this.saveSettings();
+
+				if (shouldRemoveFurigana) {
+					await this.removeFuriganaFromSelection(editor);
+				}
+				new Notice(t.excludeKanjisSaved);
+			}
+		).open();
 	}
 }
