@@ -6,13 +6,13 @@ import {
 	TextAreaComponent,
 	Modal,
 } from "obsidian";
-import { getLangStrings } from "../lang/translations";
+import { getLangStrings } from "lang/translations";
 import {
 	FirstInstanceScope,
 	LanguageSetting,
 	JlptLevelsToInclude,
 } from "lib/types";
-import ObsidianFuriganaGenerator from "../main";
+import ObsidianFuriganaGenerator from "main";
 
 export interface FuriganaGeneratorPluginSettings {
 	language: LanguageSetting;
