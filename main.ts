@@ -7,6 +7,7 @@ import {
 	PluginSettingTab,
 	Setting,
 	FileSystemAdapter,
+	TextAreaComponent,
 } from "obsidian";
 import { getLangStrings } from "./lang/translations";
 import { FirstInstanceScope, LanguageSetting } from "lib/types";
@@ -17,6 +18,7 @@ interface FuriganaGeneratorPluginSettings {
 	scope: FirstInstanceScope;
 	excludeHeadings: boolean;
 	jlptLevelsToInclude: JlptLevelsToInclude;
+	customExclusionList: string[];
 }
 
 const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
@@ -30,6 +32,7 @@ const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 		n2: true,
 		n1: true,
 	},
+	customExclusionList: [],
 };
 
 export default class ObsidianFuriganaGenerator extends Plugin {
@@ -40,7 +43,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		await this.loadSettings();
 
 		const t = getLangStrings(this.settings.language);
-		this.addSettingTab(new FuriganaSettingTab(this.app, this));
+
+		this.addSettingTab(new GeneralSettingTab(this.app, this));
 
 		const adapter = this.app.vault.adapter;
 		if (adapter instanceof FileSystemAdapter) {
@@ -140,7 +144,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 				selection,
 				this.settings.jlptLevelsToInclude,
 				this.settings.scope,
-				this.settings.excludeHeadings
+				this.settings.excludeHeadings,
+				this.settings.customExclusionList
 			);
 		editor.replaceSelection(selectionWithFurigana);
 	}
@@ -151,7 +156,8 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			content,
 			this.settings.jlptLevelsToInclude,
 			this.settings.scope,
-			this.settings.excludeHeadings
+			this.settings.excludeHeadings,
+			this.settings.customExclusionList
 		);
 		editor.setValue(contentWithFurigana);
 	}
@@ -171,7 +177,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 	}
 }
 
-class FuriganaSettingTab extends PluginSettingTab {
+class GeneralSettingTab extends PluginSettingTab {
 	plugin: ObsidianFuriganaGenerator;
 
 	constructor(app: App, plugin: ObsidianFuriganaGenerator) {
@@ -182,6 +188,7 @@ class FuriganaSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
+		containerEl.createEl("h2", { text: "General Settings" });
 
 		const t = getLangStrings(this.plugin.settings.language);
 
@@ -264,5 +271,27 @@ class FuriganaSettingTab extends PluginSettingTab {
 						});
 				});
 		}
+
+		new Setting(containerEl)
+			.setHeading()
+			.setName(t.settingCustomExclusionHeading);
+
+		new Setting(containerEl)
+			.setDesc(t.settingCustomExclusionDesc)
+			.addTextArea((text: TextAreaComponent) => {
+				text.setPlaceholder(t.settingCustomExclusionPlaceholder)
+					.setValue(
+						this.plugin.settings.customExclusionList.join("\n")
+					)
+					.onChange(async (value) => {
+						this.plugin.settings.customExclusionList = value
+							.split("\n")
+							.map((s) => s.trim())
+							.filter(Boolean);
+						await this.plugin.saveSettings();
+					});
+				text.inputEl.rows = 5;
+				text.inputEl.cols = 30;
+			});
 	}
 }

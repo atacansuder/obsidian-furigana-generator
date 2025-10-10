@@ -33,6 +33,11 @@ interface Translations {
 	settingJlptHeading: string;
 	settingJlptDesc: string;
 	settingJlptLevel: (level: string) => string;
+
+	settingCustomExclusionHeading: string;
+	settingCustomExclusionName: string;
+	settingCustomExclusionDesc: string;
+	settingCustomExclusionPlaceholder: string;
 }
 
 const en: Translations = {
@@ -73,6 +78,12 @@ const en: Translations = {
 		"Toggle off a level to exclude its kanji from Furigana generation.",
 	settingJlptLevel: (level: string) =>
 		`Include kanji from JLPT ${level.toUpperCase()}`,
+
+	settingCustomExclusionHeading: "Custom Exclusion List",
+	settingCustomExclusionName: "Kanji to exclude",
+	settingCustomExclusionDesc:
+		"Add words here to exclude them from furigana generation. Please add one word per line. Verbs must be in their basic (dictionary) form.",
+	settingCustomExclusionPlaceholder: "e.g.\n日本語\n食べる\n字",
 };
 
 const ja: Translations = {
@@ -114,6 +125,12 @@ const ja: Translations = {
 		"レベルをオフにすると、そのレベルの漢字がルビ振りから除外されます。",
 	settingJlptLevel: (level: string) =>
 		`JLPT ${level.toUpperCase()}の漢字を含める`,
+
+	settingCustomExclusionHeading: "カスタム除外リスト",
+	settingCustomExclusionName: "除外する漢字",
+	settingCustomExclusionDesc:
+		"ふりがな生成から除外する単語を、1行に1つずつ入力してください。動詞は必ず辞書形で指定します。",
+	settingCustomExclusionPlaceholder: "例:\n日本語\n食べる\n字",
 };
 
 const localizations: Record<string, Translations> = {

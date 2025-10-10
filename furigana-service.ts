@@ -38,7 +38,8 @@ export class FuriganaService {
 		text: string,
 		jlptLevelsToInclude: JlptLevelsToInclude,
 		scope: FirstInstanceScope,
-		excludeHeadings: boolean
+		excludeHeadings: boolean,
+		customExclusionList: string[]
 	): Promise<string> {
 		const placeholders: string[] = [];
 
@@ -68,7 +69,8 @@ export class FuriganaService {
 							paragraph,
 							jlptLevelsToInclude,
 							scope,
-							seenInParagraph
+							seenInParagraph,
+							customExclusionList
 						);
 					})
 					.join("\n");
@@ -87,7 +89,8 @@ export class FuriganaService {
 									sentence,
 									jlptLevelsToInclude,
 									scope,
-									seenInSentence
+									seenInSentence,
+									customExclusionList
 								);
 							})
 							.join("");
@@ -102,7 +105,8 @@ export class FuriganaService {
 					textWithPlaceholders,
 					jlptLevelsToInclude,
 					scope,
-					seenWords
+					seenWords,
+					customExclusionList
 				);
 				break;
 		}
@@ -124,7 +128,8 @@ export class FuriganaService {
 		text: string,
 		jlptLevelsToInclude: JlptLevelsToInclude,
 		scope: FirstInstanceScope,
-		seenWords: Set<string>
+		seenWords: Set<string>,
+		customExclusionList: string[]
 	): string {
 		if (!this.tokenizer) {
 			new Notice(
@@ -150,14 +155,25 @@ export class FuriganaService {
 			}
 		}
 
+		const customExclusionSet = new Set(customExclusionList);
+
+		console.log(customExclusionList);
+
 		const tokens = this.tokenizer.tokenize(text);
 		const kanjiRegex: RegExp = /[一-龯]/u;
+
+		console.log(tokens);
 
 		return tokens
 			.map((token) => {
 				const surface = token.surface_form;
+				const basicForm = token.basic_form;
 
 				if (surface.startsWith("__EXCLUDED_PLACEHOLDER_")) {
+					return surface;
+				}
+
+				if (customExclusionSet.has(basicForm)) {
 					return surface;
 				}
 
