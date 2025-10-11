@@ -294,7 +294,7 @@ export class FuriganaService {
 										result += `{${kanjiSequence}|${hiraganaPart}}`;
 										break;
 									case "JAPANESE-NOVEL":
-										result += `${kanjiSequence}ã€Š${hiraganaPart}ã€‹`;
+										result += `${kanjiSequence}《${hiraganaPart}》`;
 										break;
 									case "RUBY":
 									default:
