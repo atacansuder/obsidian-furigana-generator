@@ -73,10 +73,10 @@ export class KanjisExclusionModal extends Modal {
 			.setName(t.excludeKanjisModalLabel)
 			.addTextArea((text) => {
 				this.textArea = text;
-				text.setValue(this.kanjis.join("\n")).inputEl.setCssStyles({
-					width: "100%",
-					minHeight: "120px",
-				});
+				text.setValue(this.kanjis.join("\n"));
+				text.inputEl.addClass(
+					"furigana-generator-exclusion-list-textarea"
+				);
 			});
 
 		new Setting(contentEl)
@@ -167,7 +167,7 @@ export class GeneralSettingTab extends PluginSettingTab {
 		const warningEl = syntaxSetting.descEl.createEl("p");
 		warningEl.createEl("strong", {
 			text: t.settingSyntaxWarningHeading,
-			attr: { style: "color: red;" },
+			cls: "furigana-generator-warning-text",
 		});
 		warningEl.appendText(` ${t.settingSyntaxWarningDescPart1}`);
 		warningEl.createEl("a", {
@@ -270,15 +270,14 @@ export class GeneralSettingTab extends PluginSettingTab {
 							.filter(Boolean);
 						await this.plugin.saveSettings();
 					});
-				text.inputEl.rows = 5;
-				text.inputEl.cols = 30;
+				text.inputEl.addClass(
+					"furigana-generator-custom-exclusion-textarea"
+				);
 			});
 
 		containerEl.createEl("hr");
 		const donationDiv = containerEl.createEl("div", {
-			attr: {
-				style: "text-align: center;",
-			},
+			cls: "furigana-generator-donation-div",
 		});
 		donationDiv.createEl("p", {
 			text: t.settingCoffeeText,
@@ -288,8 +287,8 @@ export class GeneralSettingTab extends PluginSettingTab {
 		});
 
 		donationLink.createEl("img", {
+			cls: "furigana-generator-bmc-image",
 			attr: {
-				style: "height: 50px",
 				src: "https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png",
 				alt: "Buy Me a Coffee",
 			},
