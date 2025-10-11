@@ -287,6 +287,12 @@ export class GeneralSettingTab extends PluginSettingTab {
 			href: "https://www.buymeacoffee.com/asuder",
 		});
 
-		donationLink.innerHTML = `<img style="height: 50px" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee">`;
+		donationLink.createEl("img", {
+			attr: {
+				style: "height: 50px",
+				src: "https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png",
+				alt: "Buy Me a Coffee",
+			},
+		});
 	}
 }
