@@ -42,12 +42,9 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
 
 ### General Settings
 
--   **Language**: Sets the display language for the plugin's interface and commands.
+-   **Language**: Sets the display language for the plugin's interface and commands. Available languages are English and Japanese.
 
-    -   **Auto**: Uses Obsidian's current language setting.
-    -   **English**: Sets the language to English.
-    -   **日本語**: Sets the language to Japanese.
-    -   > **Note**: After changing the language, you may need to reload Obsidian for the changes to fully apply in the command palette and context menus.
+    > **Note**: After changing the language, you may need to reload Obsidian for the changes to fully apply in the command palette and context menus.
 
 -   **Furigana generation scope**: Controls how frequently furigana is added for recurring words within a given text.
 
@@ -61,7 +58,7 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
     -   **Ruby**: (Default) Uses HTML `<ruby>` tags, which render correctly in Obsidian's reading view out of the box.
     -   **Markdown**: Uses the `{kanji|reading}` syntax.
     -   **Japanese Novel**: Uses the `kanji《reading》` syntax.
-    -   > **Warning**: To properly render the `Markdown` or `Japanese Novel` syntaxes in reading view, you will need to install a corresponding plugin like [Markdown Furigana](https://github.com/steven-kraft/obsidian-markdown-furigana) or [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby). This setting is here to support users of the mentioned plugins.
+        > **Warning**: To properly render the `Markdown` or `Japanese Novel` syntaxes in reading view, you will need to install a corresponding plugin like [Markdown Furigana](https://github.com/steven-kraft/obsidian-markdown-furigana) or [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby). This setting is here to support users of the mentioned plugins.
 
 -   **Exclude headings**: If enabled, furigana will not be generated for any text within a heading (e.g., `# My Heading`). Adding furigana to headings can break your [links to headings](https://help.obsidian.md/Links+and+backlinks/Internal+links#Link+to+a+heading+in+a+note) so be careful when generating furigana for headings.
 
