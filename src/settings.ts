@@ -165,7 +165,10 @@ export class GeneralSettingTab extends PluginSettingTab {
 		);
 
 		const warningEl = syntaxSetting.descEl.createEl("p");
-		warningEl.createEl("strong", { text: t.settingSyntaxWarningHeading });
+		warningEl.createEl("strong", {
+			text: t.settingSyntaxWarningHeading,
+			attr: { style: "color: red;" },
+		});
 		warningEl.appendText(` ${t.settingSyntaxWarningDescPart1}`);
 		warningEl.createEl("a", {
 			text: "Markdown Furigana",
