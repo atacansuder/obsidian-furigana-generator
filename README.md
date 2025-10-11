@@ -25,7 +25,7 @@ The following commands are available:
 -   **Remove furigana from selection**: Removes all furigana from the highlighted text.
 -   **Add furigana to note**: Scans the entire current note and adds furigana to all Japanese text.
 -   **Remove furigana from note**: Removes all furigana from the entire current note.
--   **Mark kanjis to exclude...**: Adds the selected word(s) to a custom exclusion list. Words in this list will be ignored during furigana generation. This is useful for proper nouns or words you already know.
+-   **Mark kanjis to exclude...**: Adds the selected word(s) to a custom exclusion list. Words in this list will be ignored during furigana generation. This is useful for proper nouns or words you already know. You have a chance to review and edit detected kanjis before adding them to the exclusion list.
 
 ### Context Menu (Right-Click)
 
