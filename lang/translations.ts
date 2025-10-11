@@ -42,6 +42,13 @@ interface Translations {
 	settingCustomExclusionDesc: string;
 	settingCustomExclusionPlaceholder: string;
 
+	settingSyntaxWarningHeading: string;
+	settingSyntaxWarningDescPart1: string;
+	settingSyntaxWarningDescPart2: string;
+	settingSyntaxWarningDescPart3: string;
+
+	settingCoffeeText: string;
+
 	// Kanji Exclusion Modal
 	excludeKanjisModalTitle: string;
 	excludeKanjisModalDesc: string;
@@ -52,12 +59,6 @@ interface Translations {
 	excludeKanjisNoNew: string;
 	excludeKanjisSaved: string;
 	excludeKanjiRemoveFuriganaToggle: string;
-
-	// Syntax Warning
-	settingSyntaxWarningHeading: string;
-	settingSyntaxWarningDescPart1: string;
-	settingSyntaxWarningDescPart2: string;
-	settingSyntaxWarningDescPart3: string;
 }
 
 const en: Translations = {
@@ -127,6 +128,9 @@ const en: Translations = {
 		"In order to render syntaxes other than the default ruby syntax, you need other plugins. See ",
 	settingSyntaxWarningDescPart2: " and ",
 	settingSyntaxWarningDescPart3: " plugins for syntax support.",
+
+	settingCoffeeText:
+		"If you find this plugin useful, please consider supporting its development.",
 };
 
 const ja: Translations = {
@@ -196,6 +200,9 @@ const ja: Translations = {
 		"デフォルトのルビ構文以外をレンダリングするには、別途プラグインが必要です。詳しくは ",
 	settingSyntaxWarningDescPart2: " と ",
 	settingSyntaxWarningDescPart3: " を参照してください。",
+
+	settingCoffeeText:
+		"このプラグインを気に入っていただけましたら、開発の応援をよろしくお願いいたします。",
 };
 
 const localizations: Record<string, Translations> = {

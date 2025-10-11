@@ -270,5 +270,20 @@ export class GeneralSettingTab extends PluginSettingTab {
 				text.inputEl.rows = 5;
 				text.inputEl.cols = 30;
 			});
+
+		containerEl.createEl("hr");
+		const donationDiv = containerEl.createEl("div", {
+			attr: {
+				style: "text-align: center;",
+			},
+		});
+		donationDiv.createEl("p", {
+			text: t.settingCoffeeText,
+		});
+		const donationLink = donationDiv.createEl("a", {
+			href: "https://www.buymeacoffee.com/asuder",
+		});
+
+		donationLink.innerHTML = `<img style="height: 50px" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee">`;
 	}
 }
