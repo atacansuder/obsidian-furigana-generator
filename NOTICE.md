@@ -7,7 +7,7 @@ This project incorporates third-party software, which is licensed under the term
 ## kuromoji.js (@patdx/kuromoji)
 
 This component is licensed under the Apache License, Version 2.0.
-The original project can be found at [https://github.com/patdx/kuromoji.js].
+The original project can be found at https://github.com/patdx/kuromoji.js.
 
 ```
 
@@ -219,7 +219,7 @@ The original project can be found at [https://github.com/patdx/kuromoji.js].
 ## wanakana
 
 This component is licensed under the MIT License.
-The original project can be found at [https://github.com/WaniKani/WanaKana].
+The original project can be found at https://github.com/WaniKani/WanaKana.
 
 ```
 The MIT License (MIT)
