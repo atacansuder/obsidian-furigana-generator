@@ -1,6 +1,4 @@
-import * as kuromoji from "@patdx/kuromoji";
 import * as wanakana from "wanakana";
-import NodeDictionaryLoader from "@patdx/kuromoji/node";
 import { Notice } from "obsidian";
 
 import {
@@ -10,20 +8,23 @@ import {
 } from "lib/types";
 import { jlptN5, jlptN4, jlptN3, jlptN2, jlptN1 } from "data/kanji-sets";
 
-type Tokenizer = Awaited<
-	ReturnType<InstanceType<typeof kuromoji.TokenizerBuilder>["build"]>
->;
+type Tokenizer = any;
 
 export class FuriganaService {
 	private tokenizer: Tokenizer | undefined;
 	private dictionaryPath: string;
 
 	constructor(basePath: string) {
-		this.dictionaryPath = `${basePath}/node_modules/@patdx/kuromoji/dict/`;
+		this.dictionaryPath = `${basePath}/dict/`;
 	}
 
 	async initialize() {
 		try {
+			const kuromoji = await import("@patdx/kuromoji");
+			const { default: NodeDictionaryLoader } = await import(
+				"@patdx/kuromoji/node"
+			);
+
 			this.tokenizer = await new kuromoji.TokenizerBuilder({
 				loader: new NodeDictionaryLoader({
 					dic_path: this.dictionaryPath,
@@ -145,7 +146,7 @@ export class FuriganaService {
 			return [];
 		}
 		const tokens = this.tokenizer?.tokenize(text);
-		const kanjis = tokens.flatMap((token) =>
+		const kanjis = tokens.flatMap((token: { basic_form: string }) =>
 			/[一-龯]/u.test(token.basic_form) ? [token.basic_form] : []
 		);
 
@@ -195,119 +196,126 @@ export class FuriganaService {
 		console.log(tokens);
 
 		return tokens
-			.map((token) => {
-				const surface = token.surface_form;
-				const basicForm = token.basic_form;
+			.map(
+				(token: {
+					surface_form: string;
+					basic_form: string;
+					reading: string;
+					word_type: string;
+				}) => {
+					const surface = token.surface_form;
+					const basicForm = token.basic_form;
 
-				if (surface.startsWith("__EXCLUDED_PLACEHOLDER_")) {
-					return surface;
-				}
+					if (surface.startsWith("__EXCLUDED_PLACEHOLDER_")) {
+						return surface;
+					}
 
-				if (customExclusionSet.has(basicForm)) {
-					return surface;
-				}
+					if (customExclusionSet.has(basicForm)) {
+						return surface;
+					}
 
-				const reading = token.reading;
+					const reading = token.reading;
 
-				if (!reading || token.word_type === "UNKNOWN") {
-					return surface;
-				}
+					if (!reading || token.word_type === "UNKNOWN") {
+						return surface;
+					}
 
-				if (!kanjiRegex.test(surface)) {
-					return surface;
-				}
+					if (!kanjiRegex.test(surface)) {
+						return surface;
+					}
 
-				const kanjiCharsInToken = [...surface].filter((char) =>
-					kanjiRegex.test(char)
-				);
-				if (
-					kanjiCharsInToken.length > 0 &&
-					kanjiCharsInToken.every((kanji) =>
-						kanjiToSkipSet.has(kanji)
-					)
-				) {
-					return surface;
-				}
+					const kanjiCharsInToken = [...surface].filter((char) =>
+						kanjiRegex.test(char)
+					);
+					if (
+						kanjiCharsInToken.length > 0 &&
+						kanjiCharsInToken.every((kanji) =>
+							kanjiToSkipSet.has(kanji)
+						)
+					) {
+						return surface;
+					}
 
-				if (scope !== "ALL" && seenWords.has(surface)) {
-					return surface;
-				}
+					if (scope !== "ALL" && seenWords.has(surface)) {
+						return surface;
+					}
 
-				const hiraganaReading = wanakana.toHiragana(reading);
-				if (surface === hiraganaReading) {
-					return surface;
-				}
+					const hiraganaReading = wanakana.toHiragana(reading);
+					if (surface === hiraganaReading) {
+						return surface;
+					}
 
-				if (scope !== "ALL") {
-					seenWords.add(surface);
-				}
+					if (scope !== "ALL") {
+						seenWords.add(surface);
+					}
 
-				let result = "";
-				let surfaceIndex = 0;
-				let readingIndex = 0;
-				while (surfaceIndex < surface.length) {
-					if (wanakana.isKanji(surface[surfaceIndex])) {
-						let kanjiSequence = "";
-						while (
-							surfaceIndex < surface.length &&
-							wanakana.isKanji(surface[surfaceIndex])
-						) {
-							kanjiSequence += surface[surfaceIndex];
-							surfaceIndex++;
-						}
+					let result = "";
+					let surfaceIndex = 0;
+					let readingIndex = 0;
+					while (surfaceIndex < surface.length) {
+						if (wanakana.isKanji(surface[surfaceIndex])) {
+							let kanjiSequence = "";
+							while (
+								surfaceIndex < surface.length &&
+								wanakana.isKanji(surface[surfaceIndex])
+							) {
+								kanjiSequence += surface[surfaceIndex];
+								surfaceIndex++;
+							}
 
-						let hiraganaPart = "";
-						// Find the corresponding reading part for the kanji sequence
-						let tempReadingIndex = readingIndex;
-						let nextKanaIndex = -1;
+							let hiraganaPart = "";
+							// Find the corresponding reading part for the kanji sequence
+							let tempReadingIndex = readingIndex;
+							let nextKanaIndex = -1;
 
-						if (surfaceIndex < surface.length) {
-							const nextKana = surface[surfaceIndex];
-							nextKanaIndex = hiraganaReading.indexOf(
-								nextKana,
-								tempReadingIndex
-							);
-						}
+							if (surfaceIndex < surface.length) {
+								const nextKana = surface[surfaceIndex];
+								nextKanaIndex = hiraganaReading.indexOf(
+									nextKana,
+									tempReadingIndex
+								);
+							}
 
-						if (nextKanaIndex !== -1) {
-							hiraganaPart = hiraganaReading.substring(
-								readingIndex,
-								nextKanaIndex
-							);
-							readingIndex = nextKanaIndex;
-						} else {
-							hiraganaPart =
-								hiraganaReading.substring(readingIndex);
-							readingIndex = hiraganaReading.length;
-						}
+							if (nextKanaIndex !== -1) {
+								hiraganaPart = hiraganaReading.substring(
+									readingIndex,
+									nextKanaIndex
+								);
+								readingIndex = nextKanaIndex;
+							} else {
+								hiraganaPart =
+									hiraganaReading.substring(readingIndex);
+								readingIndex = hiraganaReading.length;
+							}
 
-						if (kanjiSequence !== hiraganaPart) {
-							switch (syntax) {
-								case "MARKDOWN":
-									result += `{${kanjiSequence}|${hiraganaPart}}`;
-									break;
-								case "JAPANESE-NOVEL":
-									result += `${kanjiSequence}《${hiraganaPart}》`;
-									break;
-								case "RUBY":
-								default:
-									result += `<ruby>${kanjiSequence}<rt>${hiraganaPart}</rt></ruby>`;
-									break;
+							if (kanjiSequence !== hiraganaPart) {
+								switch (syntax) {
+									case "MARKDOWN":
+										result += `{${kanjiSequence}|${hiraganaPart}}`;
+										break;
+									case "JAPANESE-NOVEL":
+										result += `${kanjiSequence}ã€Š${hiraganaPart}ã€‹`;
+										break;
+									case "RUBY":
+									default:
+										result += `<ruby>${kanjiSequence}<rt>${hiraganaPart}</rt></ruby>`;
+										break;
+								}
+							} else {
+								result += kanjiSequence;
 							}
 						} else {
-							result += kanjiSequence;
+							const char = surface[surfaceIndex];
+							result += char;
+							if (hiraganaReading[readingIndex] === char) {
+								readingIndex++;
+							}
+							surfaceIndex++;
 						}
-					} else {
-						const char = surface[surfaceIndex];
-						result += char;
-						if (hiraganaReading[readingIndex] === char) {
-							readingIndex++;
-						}
-						surfaceIndex++;
 					}
+					return result;
 				}
-				return result;
-			})
+			)
 			.join("");
 	}
 }
