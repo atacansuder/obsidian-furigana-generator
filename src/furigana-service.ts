@@ -51,10 +51,24 @@ export class FuriganaService {
 	): Promise<string> {
 		const placeholders: string[] = [];
 
-		// Existing ruby tags (all formats), external and internal links, code blocks, file properties, comments, headings (optional)
 		const headingPattern = excludeHeadings ? "|(?:^|\\n)#{1,6} .+$" : "";
 		const exclusionRegex = new RegExp(
-			`(<ruby>.*?<\\/rt><\\/ruby>|\\{.*?\\|.*?\\}|.*?《.*?》|\\[\\[.*?\\]\\]|\\[.*?\\]\\(.*?\\)|#\\S+|\`[^\`]*\`|\`\`\`[\\s\\S]*?\`\`\`|(?:^|\\n)---\\n[\\s\\S]*?\\n---|%%.*?%%${headingPattern})`,
+			`(` +
+				`<ruby>.*?<\\/rt><\\/ruby>|` + // Ruby tags with rt closing
+				`\\{.*?\\|.*?\\}|` + // Markdown
+				`.*?《.*?》|` + // Japanese novel ruby
+				`\\[\\[.*?\\]\\]|` + // Obsidian internal links
+				`\\[.*?\\]\\(.*?\\)|` + // Markdown external links
+				`https?:\\/\\/\\S+|` + // Bare URLs
+				`#\\S+|` + // Tags
+				`\`[^\`]*\`|` + // Inline code
+				`\`\`\`[\\s\\S]*?\`\`\`|` + // Code blocks
+				`<%.*?%>|` + // Templater commands
+				`\\[\\^.*?\\]|` + // Footnote references
+				`(?:^|\\n)---\\n[\\s\\S]*?\\n---|` + // YAML frontmatter
+				`%%.*?%%` + // Obsidian comments
+				`${headingPattern}` +
+				`)`,
 			"gm"
 		);
 		let placeholderIndex = 0;
