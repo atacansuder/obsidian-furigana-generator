@@ -2,7 +2,17 @@
 
 # Obsidian Furigana Generator
 
-Obsidian Furigana Generator is a plugin for [Obsidian](https://obsidian.md) that generates furigana for Japanese texts.
+Obsidian Furigana Generator is a plugin for [Obsidian](https://obsidian.md) that generates furigana for Japanese texts. The plugin includes logic and dictionary files necessary for furigana generation.
+
+## Features
+
+-   **Automatic Furigana Generation**: Add furigana to selected Japanese text or an entire note with a single command.
+-   **Filtering**:
+    -   **JLPT Levels**: Exclude kanji from specific JLPT levels (N1-N5) that you already know.
+    -   **Custom Exclusion List**: Create a personal list of words to be ignored during furigana generation.
+-   **Granular Control**: Set the scope to add furigana to every word occurrence, or only the first time a word appears in a sentence, paragraph, or the entire text.
+-   **Easy Workflow**: Access commands through the Command Palette or the right-click context menu.
+-   **Safe Processing**: Skips headings, links, code blocks, and existing furigana to prevent formatting issues in your notes.
 
 ## Installation
 
@@ -12,7 +22,7 @@ Obsidian Furigana Generator is a plugin for [Obsidian](https://obsidian.md) that
 
 ## Usage
 
-You can add or remove furigana using the Command Palette or the right-click context menu. The behavior of the furigana generation can be customized in the plugin settings (e.g., applying furigana to every instance of a word vs. only the first instance in a paragraph).
+You can add or remove furigana using the Command Palette or the right-click context menu. The behavior of the furigana generation can be customized in the [plugin settings](#settings) (e.g., applying furigana to every instance of a word vs. only the first instance in a paragraph).
 
 ### Command Palette
 
@@ -25,7 +35,7 @@ The following commands are available:
 -   **Remove furigana from selection**: Removes all furigana from the highlighted text.
 -   **Add furigana to note**: Scans the entire current note and adds furigana to all Japanese text.
 -   **Remove furigana from note**: Removes all furigana from the entire current note.
--   **Mark kanjis to exclude...**: Adds the selected word(s) to a custom exclusion list. Words in this list will be ignored during furigana generation. This is useful for proper nouns or words you already know. You have a chance to review and edit detected kanjis before adding them to the exclusion list.
+-   **Mark kanjis to exclude...**: Extracts words that include kanji from the selection to be added to the custom exclusion list. Words in this list will be ignored during furigana generation. This is useful for proper nouns or words you already know. You have a chance to review and edit detected kanjis before adding them to the exclusion list.
 
 ### Context Menu (Right-Click)
 
@@ -34,7 +44,7 @@ You can also access the commands by right-clicking in the editor. The options th
 -   **If you have text selected**: The menu will show options to add/remove furigana from the selection and add the selection to the exclusion list.
 -   **If you do not have text selected**: The menu will show options to add/remove furigana for the entire note.
 
-> **Note**: You can enable or disable the context menu commands in the plugin settings under "Show commands in context menu".
+> **Note**: You can enable or disable the context menu commands in the plugin settings under "Show commands in context menu". This is enabled by default.
 
 ## Settings
 
@@ -60,7 +70,7 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
     -   **Japanese Novel**: Uses the `kanji《reading》` syntax.
         > **Warning**: To properly render the `Markdown` or `Japanese Novel` syntaxes in reading view, you will need to install a corresponding plugin like [Markdown Furigana](https://github.com/steven-kraft/obsidian-markdown-furigana) or [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby). This setting is here to support users of the mentioned plugins.
 
--   **Exclude headings**: If enabled, furigana will not be generated for any text within a heading (e.g., `# My Heading`). Adding furigana to headings can break your [links to headings](https://help.obsidian.md/Links+and+backlinks/Internal+links#Link+to+a+heading+in+a+note) so be careful when generating furigana for headings.
+-   **Exclude headings**: If enabled, furigana will not be generated for any text within a heading (e.g., `# My Heading`). Adding furigana to headings can break your [links to them](https://help.obsidian.md/Links+and+backlinks/Internal+links#Link+to+a+heading+in+a+note) so be careful when generating furigana for headings.
 
 -   **Show commands in context menu**: If enabled, the plugin's commands will appear in the right-click context menu in addition to the command palette.
 
@@ -72,3 +82,15 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
     -   Add one word per line.
     -   Verbs must be in their basic (dictionary) form (e.g., `食べる` instead of `食べます` or `食べた`).
     -   You can also add words to this list directly from the editor using the `Mark kanjis to exclude...` command.
+
+## Feedback
+
+If you have a suggestion or want to report a bug, please create a GitHub issue.
+
+## Support the Developer
+
+If you find this plugin useful, please consider buying me a coffe.
+
+<a href="https://www.buymeacoffee.com/asuder">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" width="180" height="50">
+</a>
