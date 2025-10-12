@@ -59,6 +59,7 @@ export class FuriganaService {
 				`.*?《.*?》|` + // Japanese novel ruby
 				`\\[\\[.*?\\]\\]|` + // Obsidian internal links
 				`\\[.*?\\]\\(.*?\\)|` + // Markdown external links
+				`(?:^|\\n)>\\s*\\[![A-Z-]+\\].*|` + // Callout titles
 				`https?:\\/\\/\\S+|` + // Bare URLs
 				`#\\S+|` + // Tags
 				`\`[^\`]*\`|` + // Inline code
