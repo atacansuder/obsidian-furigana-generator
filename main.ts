@@ -149,6 +149,9 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 	}
 
 	async addFuriganaToDocument(editor: Editor) {
+		const scrollInfo = editor.getScrollInfo();
+		const cursor = editor.getCursor();
+
 		const content = editor.getValue();
 		const contentWithFurigana = await this.furiganaService.generateFurigana(
 			content,
@@ -159,6 +162,9 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			this.settings.syntax
 		);
 		editor.setValue(contentWithFurigana);
+
+		editor.scrollTo(scrollInfo.left, scrollInfo.top);
+		editor.setCursor(cursor);
 	}
 
 	async removeFuriganaFromSelection(editor: Editor) {
