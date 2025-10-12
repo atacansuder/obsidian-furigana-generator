@@ -205,22 +205,16 @@ export class FuriganaService {
 				}) => {
 					const surface = token.surface_form;
 					const basicForm = token.basic_form;
-
-					if (surface.startsWith("__EXCLUDED_PLACEHOLDER_")) {
-						return surface;
-					}
-
-					if (customExclusionSet.has(basicForm)) {
-						return surface;
-					}
-
 					const reading = token.reading;
 
-					if (!reading || token.word_type === "UNKNOWN") {
-						return surface;
-					}
-
-					if (!kanjiRegex.test(surface)) {
+					if (
+						surface.startsWith("__EXCLUDED_PLACEHOLDER_") ||
+						customExclusionSet.has(basicForm) ||
+						!kanjiRegex.test(surface) ||
+						!reading ||
+						token.word_type === "UNKNOWN" ||
+						(scope !== "ALL" && seenWords.has(surface))
+					) {
 						return surface;
 					}
 
@@ -233,10 +227,6 @@ export class FuriganaService {
 							kanjiToSkipSet.has(kanji)
 						)
 					) {
-						return surface;
-					}
-
-					if (scope !== "ALL" && seenWords.has(surface)) {
 						return surface;
 					}
 
