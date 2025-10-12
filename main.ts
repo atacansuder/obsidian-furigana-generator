@@ -23,7 +23,10 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		if (adapter instanceof FileSystemAdapter) {
 			const pluginBasePath = adapter.getFullPath(this.manifest.dir!);
 
-			this.furiganaService = new FuriganaService(pluginBasePath);
+			this.furiganaService = new FuriganaService(
+				pluginBasePath,
+				this.settings.language
+			);
 			await this.furiganaService.initialize();
 		} else {
 			new Notice(t.fsNotSupported);

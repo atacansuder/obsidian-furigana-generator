@@ -59,6 +59,10 @@ interface Translations {
 	excludeKanjisNoNew: string;
 	excludeKanjisSaved: string;
 	excludeKanjiRemoveFuriganaToggle: string;
+
+	// Notices
+	noticeTokenizerNotReady: string;
+	noticeDictionaryNotFound: string;
 }
 
 const en: Translations = {
@@ -131,6 +135,12 @@ const en: Translations = {
 
 	settingCoffeeText:
 		"If you find this plugin useful, please consider supporting its development.",
+
+	// Notices
+	noticeTokenizerNotReady:
+		"Tokenizer is not ready. Please wait a moment and try again.",
+	noticeDictionaryNotFound:
+		"Furigana dictionary not found. Please try reinstalling the plugin.",
 };
 
 const ja: Translations = {
@@ -203,6 +213,12 @@ const ja: Translations = {
 
 	settingCoffeeText:
 		"このプラグインを気に入っていただけましたら、開発の応援をよろしくお願いいたします。",
+
+	// Notices
+	noticeTokenizerNotReady:
+		"トークナイザーの準備ができていません。しばらく待ってからもう一度お試しください。",
+	noticeDictionaryNotFound:
+		"ふりがな用の辞書が見つかりませんでした。プラグインを再インストールしてみてください。",
 };
 
 const localizations: Record<string, Translations> = {

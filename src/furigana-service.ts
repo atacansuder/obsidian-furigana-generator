@@ -5,20 +5,25 @@ import {
 	FirstInstanceScope,
 	JlptLevelsToInclude,
 	FuriganaSyntax,
+	LanguageSetting,
 } from "lib/types";
 import { jlptN5, jlptN4, jlptN3, jlptN2, jlptN1 } from "data/kanji-sets";
+import { getLangStrings } from "../lang/translations";
 
 type Tokenizer = any;
 
 export class FuriganaService {
 	private tokenizer: Tokenizer | undefined;
 	private dictionaryPath: string;
+	private languageSetting: LanguageSetting;
 
-	constructor(basePath: string) {
+	constructor(basePath: string, languageSetting: LanguageSetting) {
 		this.dictionaryPath = `${basePath}/dict/`;
+		this.languageSetting = languageSetting;
 	}
 
 	async initialize() {
+		const t = getLangStrings(this.languageSetting);
 		try {
 			const kuromoji = await import("@patdx/kuromoji");
 			const { default: NodeDictionaryLoader } = await import(
@@ -30,12 +35,9 @@ export class FuriganaService {
 					dic_path: this.dictionaryPath,
 				}),
 			}).build();
-			console.log("Tokenizer initialized!");
 		} catch (error) {
-			console.error("Error initializing tokenizer: ", error);
-			new Notice(
-				"Furigana dictionary not found. Please try reinstalling the plugin."
-			);
+			console.error(`[Obsidian Furigana Generator]: ${error}`);
+			new Notice(t.noticeDictionaryNotFound);
 		}
 	}
 
@@ -50,7 +52,6 @@ export class FuriganaService {
 		const placeholders: string[] = [];
 
 		const headingPattern = excludeHeadings ? "|(?:^|\\n)#{1,6} .+$" : "";
-		// Existing ruby tags (all formats), external and internal links, code blocks, file properties, headings (optional)
 		const exclusionRegex = new RegExp(
 			`(<ruby>.*?<\\/rt><\\/ruby>|\\{.*?\\|.*?\\}|.*?《.*?》|\\[\\[.*?\\]\\]|\\[.*?\\]\\(.*?\\)|#\\S+|\`[^\`]*\`|\`\`\`[\\s\\S]*?\`\`\`|(?:^|\\n)---\\n[\\s\\S]*?\\n---${headingPattern})`,
 			"gm"
@@ -139,10 +140,9 @@ export class FuriganaService {
 	}
 
 	public async extractKanjis(text: string): Promise<string[]> {
+		const t = getLangStrings(this.languageSetting);
 		if (!this.tokenizer) {
-			new Notice(
-				"Furigana generator is not ready, please wait for the plugin to load."
-			);
+			new Notice(t.fsNotSupported);
 			return [];
 		}
 		const tokens = this.tokenizer?.tokenize(text);
@@ -150,7 +150,6 @@ export class FuriganaService {
 			/[一-龯]/u.test(token.basic_form) ? [token.basic_form] : []
 		);
 
-		console.log(kanjis);
 		return kanjis;
 	}
 
@@ -162,10 +161,9 @@ export class FuriganaService {
 		customExclusionList: string[],
 		syntax: FuriganaSyntax
 	): string {
+		const t = getLangStrings(this.languageSetting);
 		if (!this.tokenizer) {
-			new Notice(
-				"Furigana generator is not ready, please wait for the plugin to load."
-			);
+			new Notice(t.fsNotSupported);
 			return text;
 		}
 
@@ -188,12 +186,8 @@ export class FuriganaService {
 
 		const customExclusionSet = new Set(customExclusionList);
 
-		console.log(customExclusionList);
-
 		const tokens = this.tokenizer.tokenize(text);
 		const kanjiRegex: RegExp = /[一-龯]/u;
-
-		console.log(tokens);
 
 		return tokens
 			.map(
