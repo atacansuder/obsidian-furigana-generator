@@ -261,34 +261,38 @@ export class FuriganaService {
 					while (surfaceIndex < surface.length) {
 						if (kanjiRegex.test(surface[surfaceIndex])) {
 							let kanjiSequence = "";
+							let tempSurfaceIndex = surfaceIndex;
 							while (
-								surfaceIndex < surface.length &&
-								kanjiRegex.test(surface[surfaceIndex])
+								tempSurfaceIndex < surface.length &&
+								kanjiRegex.test(surface[tempSurfaceIndex])
 							) {
-								kanjiSequence += surface[surfaceIndex];
-								surfaceIndex++;
+								kanjiSequence += surface[tempSurfaceIndex];
+								tempSurfaceIndex++;
 							}
 
 							let hiraganaPart = "";
-							// Find the corresponding reading part for the kanji sequence
-							let tempReadingIndex = readingIndex;
-							let nextKanaIndex = -1;
+							let nextKanaIndexInReading = -1;
 
-							if (surfaceIndex < surface.length) {
-								const nextKana = surface[surfaceIndex];
-								nextKanaIndex = hiraganaReading.indexOf(
-									nextKana,
-									tempReadingIndex
+							// Find the next kana character in the surface form (if any)
+							if (tempSurfaceIndex < surface.length) {
+								const nextKana = this.katakanaToHiragana(
+									surface[tempSurfaceIndex]
 								);
+								nextKanaIndexInReading =
+									hiraganaReading.indexOf(
+										nextKana,
+										readingIndex
+									);
 							}
 
-							if (nextKanaIndex !== -1) {
+							if (nextKanaIndexInReading !== -1) {
 								hiraganaPart = hiraganaReading.substring(
 									readingIndex,
-									nextKanaIndex
+									nextKanaIndexInReading
 								);
-								readingIndex = nextKanaIndex;
+								readingIndex = nextKanaIndexInReading;
 							} else {
+								// Kanji is at the end of the word
 								hiraganaPart =
 									hiraganaReading.substring(readingIndex);
 								readingIndex = hiraganaReading.length;
@@ -310,10 +314,15 @@ export class FuriganaService {
 							} else {
 								result += kanjiSequence;
 							}
+							surfaceIndex = tempSurfaceIndex;
 						} else {
 							const char = surface[surfaceIndex];
 							result += char;
-							if (hiraganaReading[readingIndex] === char) {
+							if (
+								readingIndex < hiraganaReading.length &&
+								this.katakanaToHiragana(char) ===
+									hiraganaReading[readingIndex]
+							) {
 								readingIndex++;
 							}
 							surfaceIndex++;
