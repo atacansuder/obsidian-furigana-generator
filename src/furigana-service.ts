@@ -17,7 +17,7 @@ export class FuriganaService {
 	private languageSetting: LanguageSetting;
 
 	constructor(basePath: string, languageSetting: LanguageSetting) {
-		this.dictionaryPath = `${basePath}/dict/`;
+		this.dictionaryPath = `${basePath}/`;
 		this.languageSetting = languageSetting;
 	}
 
