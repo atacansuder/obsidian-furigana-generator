@@ -130,7 +130,6 @@ export class GeneralSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t.settingLanguage)
-			.setDesc(t.settingLanguageDesc)
 			.addDropdown((dropdown) => {
 				dropdown
 					.addOption("auto", t.settingLanguageOptAuto)
