@@ -2,7 +2,7 @@
 	"id": "obsidian-furigana-generator",
 	"name": "Furigana Generator",
 	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
+	"minAppVersion": "1.9.0",
 	"description": "Automatically generates furigana for Japanese characters.",
 	"author": "Atacan Süder",
 	"authorUrl": "https://github.com/atacansuder",
