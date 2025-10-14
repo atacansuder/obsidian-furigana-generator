@@ -14,6 +14,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+		this.updateBodyClass();
 
 		const t = getLangStrings(this.settings.language);
 
@@ -120,7 +121,9 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		);
 	}
 
-	onunload() {}
+	onunload() {
+		document.body.classList.remove("furigana-hover-hide");
+	}
 
 	async loadSettings() {
 		this.settings = Object.assign(
@@ -132,6 +135,14 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+		this.updateBodyClass();
+	}
+
+	updateBodyClass(): void {
+		document.body.classList.toggle(
+			"furigana-hover-hide",
+			this.settings.hideFuriganaOnHover
+		);
 	}
 
 	async addFuriganaToSelection(editor: Editor) {

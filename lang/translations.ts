@@ -33,6 +33,10 @@ interface Translations {
 	settingShowInContextMenuHeading: string;
 	settingShowInContextMenuDesc: string;
 
+	settingAppearanceHeading: string;
+	settingHideFuriganaOnHoverName: string;
+	settingHideFuriganaOnHoverDesc: string;
+
 	settingJlptHeading: string;
 	settingJlptDesc: string;
 	settingJlptLevel: (level: string) => string;
@@ -102,6 +106,11 @@ const en: Translations = {
 	settingShowInContextMenuHeading: "Show commands in context menu",
 	settingShowInContextMenuDesc:
 		"If enabled, furigana-related commands will also appear in the context menu, in addition to the command palette.",
+
+	settingAppearanceHeading: "Appearance",
+	settingHideFuriganaOnHoverName: "Hide furigana unless hovered",
+	settingHideFuriganaOnHoverDesc:
+		"If enabled, furigana will be hidden until you hover over the word.",
 
 	settingJlptHeading: "JLPT Filtering",
 	settingJlptDesc:
@@ -180,6 +189,11 @@ const ja: Translations = {
 	settingShowInContextMenuHeading: "コンテキストメニューにボタンを追加",
 	settingShowInContextMenuDesc:
 		"有効にすると、ふりがなの追加・削除に関するコマンドが、コマンドパレットに加えてコンテキストメニューにも表示されます。",
+
+	settingAppearanceHeading: "表示設定",
+	settingHideFuriganaOnHoverName: "ホバーするまでふりがなを非表示",
+	settingHideFuriganaOnHoverDesc:
+		"有効にすると、単語にカーソルを合わせるまでふりがなが非表示になります。",
 
 	settingJlptHeading: "JLPTフィルター",
 	settingJlptDesc:

@@ -21,6 +21,7 @@ export interface FuriganaGeneratorPluginSettings {
 	syntax: FuriganaSyntax;
 	excludeHeadings: boolean;
 	showInContextMenu: boolean;
+	hideFuriganaOnHover: boolean;
 	jlptLevelsToInclude: JlptLevelsToInclude;
 	customExclusionList: string[];
 }
@@ -31,6 +32,7 @@ export const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	syntax: "RUBY",
 	excludeHeadings: true,
 	showInContextMenu: true,
+	hideFuriganaOnHover: false,
 	jlptLevelsToInclude: {
 		n5: true,
 		n4: true,
@@ -158,6 +160,53 @@ export class GeneralSettingTab extends PluginSettingTab {
 					});
 			});
 
+		const excludeHeadingsSetting = new Setting(containerEl)
+			.setName(t.settingExcludeHeadingsHeading)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.excludeHeadings)
+					.onChange(async (value) => {
+						this.plugin.settings.excludeHeadings = value;
+						await this.plugin.saveSettings();
+						this.display();
+					});
+			});
+
+		excludeHeadingsSetting.descEl.appendText(
+			t.settingExcludeHeadingsDescPart1
+		);
+		excludeHeadingsSetting.descEl.createEl("a", {
+			text: t.settingExcludeHeadingsDescLink,
+			href: t.settingExcludeHeadingsLink,
+		});
+		excludeHeadingsSetting.descEl.appendText(
+			t.settingExcludeHeadingsDescPart2
+		);
+
+		new Setting(containerEl)
+			.setName(t.settingShowInContextMenuHeading)
+			.setDesc(t.settingShowInContextMenuDesc)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.showInContextMenu)
+					.onChange(async (value) => {
+						this.plugin.settings.showInContextMenu = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName(t.settingHideFuriganaOnHoverName)
+			.setDesc(t.settingHideFuriganaOnHoverDesc)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.hideFuriganaOnHover)
+					.onChange(async (value) => {
+						this.plugin.settings.hideFuriganaOnHover = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
 		const syntaxSetting = new Setting(containerEl).setName("Syntax");
 
 		syntaxSetting.descEl.appendText(
@@ -193,41 +242,6 @@ export class GeneralSettingTab extends PluginSettingTab {
 					this.display();
 				});
 		});
-
-		const excludeHeadingsSetting = new Setting(containerEl)
-			.setName(t.settingExcludeHeadingsHeading)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.excludeHeadings)
-					.onChange(async (value) => {
-						this.plugin.settings.excludeHeadings = value;
-						await this.plugin.saveSettings();
-						this.display();
-					});
-			});
-
-		excludeHeadingsSetting.descEl.appendText(
-			t.settingExcludeHeadingsDescPart1
-		);
-		excludeHeadingsSetting.descEl.createEl("a", {
-			text: t.settingExcludeHeadingsDescLink,
-			href: t.settingExcludeHeadingsLink,
-		});
-		excludeHeadingsSetting.descEl.appendText(
-			t.settingExcludeHeadingsDescPart2
-		);
-
-		new Setting(containerEl)
-			.setName(t.settingShowInContextMenuHeading)
-			.setDesc(t.settingShowInContextMenuDesc)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.showInContextMenu)
-					.onChange(async (value) => {
-						this.plugin.settings.showInContextMenu = value;
-						await this.plugin.saveSettings();
-					});
-			});
 
 		new Setting(containerEl)
 			.setHeading()
