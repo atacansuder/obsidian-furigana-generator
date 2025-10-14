@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-furigana-generator",
+	"name": "furigana-generator",
 	"version": "1.0.0",
-	"description": "Generate furigana for Obsidian notes",
+	"description": "Automatically generates furigana for Japanese characters.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
