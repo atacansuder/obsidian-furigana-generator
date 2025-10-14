@@ -4,6 +4,8 @@
 
 Obsidian Furigana Generator is a plugin for [Obsidian](https://obsidian.md) that generates furigana for Japanese texts. The plugin includes logic and dictionary files necessary for furigana generation.
 
+![Add furigana showcase](./images/add_furigana_showcase.gif)
+
 ## Features
 
 -   **Automatic Furigana Generation**: Add furigana to selected Japanese text or an entire note with a single command.
@@ -36,6 +38,8 @@ The following commands are available:
 -   **Add furigana to note**: Scans the entire current note and adds furigana to all Japanese text.
 -   **Remove furigana from note**: Removes all furigana from the entire current note.
 -   **Mark kanjis to exclude...**: Extracts words that include kanji from the selection to be added to the custom exclusion list. Words in this list will be ignored during furigana generation. This is useful for proper nouns or words you already know. You have a chance to review and edit detected kanjis before adding them to the exclusion list.
+
+![Mark kanjis to exclude modal](./images/mark_kanjis_to_exclude_modal.png)
 
 ### Context Menu (Right-Click)
 
