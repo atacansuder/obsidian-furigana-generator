@@ -29,7 +29,10 @@ jobs:
               run: |
                   tag="${GITHUB_REF#refs/tags/}"
 
+                  ASSETS=("main.js" "manifest.json" "styles.css")
+                  ASSETS+=($(find dict -type f))
+
                   gh release create "$tag" \
                     --title="$tag" \
                     --draft \
-                    main.js manifest.json styles.css dict/
+                    "${ASSETS[@]}"
