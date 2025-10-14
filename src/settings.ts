@@ -228,11 +228,10 @@ export class GeneralSettingTab extends PluginSettingTab {
 				});
 		});
 
-		const syntaxSetting = new Setting(containerEl).setName("Syntax");
-
-		syntaxSetting.descEl.appendText(
-			"Select which syntax to use in editing mode for creating furigana."
+		const syntaxSetting = new Setting(containerEl).setName(
+			t.settingSyntaxHeading
 		);
+		syntaxSetting.descEl.appendText(t.settingSyntaxDesc);
 
 		const warningEl = syntaxSetting.descEl.createEl("p");
 		warningEl.createEl("strong", {

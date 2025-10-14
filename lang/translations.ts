@@ -48,6 +48,8 @@ interface Translations {
 	settingCustomExclusionDesc: string;
 	settingCustomExclusionPlaceholder: string;
 
+	settingSyntaxHeading: string;
+	settingSyntaxDesc: string;
 	settingSyntaxWarningHeading: string;
 	settingSyntaxWarningDescPart1: string;
 	settingSyntaxWarningDescPart2: string;
@@ -141,6 +143,9 @@ const en: Translations = {
 	excludeKanjiRemoveFuriganaToggle:
 		"Remove furigana from selection after saving.",
 
+	settingSyntaxHeading: "Syntax",
+	settingSyntaxDesc:
+		"Select which syntax to use in editing mode for creating furigana.",
 	settingSyntaxWarningHeading: "Warning:",
 	settingSyntaxWarningDescPart1:
 		"In order to render syntaxes other than the default ruby syntax, you need other plugins. See ",
@@ -227,6 +232,9 @@ const ja: Translations = {
 	excludeKanjisSaved: "漢字が保存されました。",
 	excludeKanjiRemoveFuriganaToggle: "保存後に選択範囲からふりがなを削除する",
 
+	settingSyntaxHeading: "構文",
+	settingSyntaxDesc:
+		"編集モードでふりがなを作成するために使用する構文を選択します。",
 	settingSyntaxWarningHeading: "警告：",
 	settingSyntaxWarningDescPart1:
 		"デフォルトのルビ構文以外をレンダリングするには、別途プラグインが必要です。詳しくは ",
