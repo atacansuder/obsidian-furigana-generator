@@ -240,6 +240,7 @@ export class FuriganaService {
 						return surface;
 					}
 
+					console.log(reading);
 					const hiraganaReading = wanakana.toHiragana(reading);
 					if (surface === hiraganaReading) {
 						return surface;
@@ -253,11 +254,11 @@ export class FuriganaService {
 					let surfaceIndex = 0;
 					let readingIndex = 0;
 					while (surfaceIndex < surface.length) {
-						if (wanakana.isKanji(surface[surfaceIndex])) {
+						if (kanjiRegex.test(surface[surfaceIndex])) {
 							let kanjiSequence = "";
 							while (
 								surfaceIndex < surface.length &&
-								wanakana.isKanji(surface[surfaceIndex])
+								kanjiRegex.test(surface[surfaceIndex])
 							) {
 								kanjiSequence += surface[surfaceIndex];
 								surfaceIndex++;
