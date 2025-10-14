@@ -36,6 +36,8 @@ interface Translations {
 	settingAppearanceHeading: string;
 	settingHideFuriganaOnHoverName: string;
 	settingHideFuriganaOnHoverDesc: string;
+	settingFuriganaFontSizeName: string;
+	settingFuriganaFontSizeDesc: string;
 
 	settingJlptHeading: string;
 	settingJlptDesc: string;
@@ -111,6 +113,9 @@ const en: Translations = {
 	settingHideFuriganaOnHoverName: "Hide furigana unless hovered",
 	settingHideFuriganaOnHoverDesc:
 		"If enabled, furigana will be hidden until you hover over the word.",
+	settingFuriganaFontSizeName: "Furigana font size",
+	settingFuriganaFontSizeDesc:
+		"Adjust the font size of the furigana text (in percent).",
 
 	settingJlptHeading: "JLPT Filtering",
 	settingJlptDesc:
@@ -194,6 +199,9 @@ const ja: Translations = {
 	settingHideFuriganaOnHoverName: "ホバーするまでふりがなを非表示",
 	settingHideFuriganaOnHoverDesc:
 		"有効にすると、単語にカーソルを合わせるまでふりがなが非表示になります。",
+	settingFuriganaFontSizeName: "ふりがなフォントサイズ",
+	settingFuriganaFontSizeDesc:
+		"ふりがなテキストのフォントサイズをパーセントで調整します。",
 
 	settingJlptHeading: "JLPTフィルター",
 	settingJlptDesc:

@@ -22,6 +22,7 @@ export interface FuriganaGeneratorPluginSettings {
 	excludeHeadings: boolean;
 	showInContextMenu: boolean;
 	hideFuriganaOnHover: boolean;
+	furiganaFontSize: number;
 	jlptLevelsToInclude: JlptLevelsToInclude;
 	customExclusionList: string[];
 }
@@ -33,6 +34,7 @@ export const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	excludeHeadings: true,
 	showInContextMenu: true,
 	hideFuriganaOnHover: false,
+	furiganaFontSize: 100,
 	jlptLevelsToInclude: {
 		n5: true,
 		n4: true,
@@ -196,6 +198,10 @@ export class GeneralSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setHeading()
+			.setName(t.settingAppearanceHeading);
+
+		new Setting(containerEl)
 			.setName(t.settingHideFuriganaOnHoverName)
 			.setDesc(t.settingHideFuriganaOnHoverDesc)
 			.addToggle((toggle) => {
@@ -206,6 +212,21 @@ export class GeneralSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+
+		const fontSizeSetting = new Setting(containerEl)
+			.setName(t.settingFuriganaFontSizeName)
+			.setDesc(t.settingFuriganaFontSizeDesc);
+
+		fontSizeSetting.addSlider((slider) => {
+			slider
+				.setLimits(100, 200, 1)
+				.setValue(this.plugin.settings.furiganaFontSize)
+				.setDynamicTooltip()
+				.onChange(async (value) => {
+					this.plugin.settings.furiganaFontSize = value;
+					await this.plugin.saveSettings();
+				});
+		});
 
 		const syntaxSetting = new Setting(containerEl).setName("Syntax");
 
