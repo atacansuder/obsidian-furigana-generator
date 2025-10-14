@@ -239,7 +239,6 @@ export class FuriganaService {
 						return surface;
 					}
 
-					console.log(reading);
 					const hiraganaReading = this.katakanaToHiragana(reading);
 					if (surface === hiraganaReading) {
 						return surface;
