@@ -56,6 +56,13 @@ export class FuriganaService {
 				`<ruby>.*?<\\/rt><\\/ruby>|` + // Ruby tags with rt closing
 				`\\{.*?\\|.*?\\}|` + // Markdown
 				`.*?《.*?》|` + // Japanese novel ruby
+				// I had to exclude formatted text because the format wouldn't be reestablished correctly after furigana generation
+				`\\*\\*.*?\\*\\*|` + // Bold with **
+				`__.*?__|` + // Bold with __
+				`\\*.*?\\*|` + // Italic with *
+				`_.*?_|` + // Italic with _
+				`~~.*?~~|` + // Strikethrough
+				`==.*?==|` + // Highlight
 				`\\[\\[.*?\\]\\]|` + // Obsidian internal links
 				`\\[.*?\\]\\(.*?\\)|` + // Markdown external links
 				`(?:^|\\n)>\\s*\\[![A-Z-]+\\].*|` + // Callout titles
