@@ -50,7 +50,7 @@ You can also access the commands by right-clicking in the editor. The options th
 
 You can customize the plugin's behavior by navigating to `Settings` → `Community Plugins` → `Furigana Generator`.
 
-### General Settings
+### General
 
 -   **Language**: Sets the display language for the plugin's interface and commands. Available languages are English and Japanese.
 
@@ -67,9 +67,13 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
 
 -   **Show commands in context menu**: If enabled, the plugin's commands will appear in the right-click context menu in addition to the command palette.
 
+### Appearance
+
 -   **Hide furigana unless hovered**: If enabled, furigana will be hidden by default and will only appear when you hover your mouse over the word.
 
     > **Note**: The [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) plugin has the same setting which might conflict with this one, please double check before toggling and use only one setting for this.
+
+-   **Furigana font size**: Adjusts the size of the furigana text. You can use the slider to set a value between 100% (default) and 200%.
 
 -   **Syntax**: Determines the markup used for generating furigana.
 
