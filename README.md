@@ -63,16 +63,20 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
     -   **First occurrence in each paragraph**: Adds furigana only to the first instance of a word within each paragraph.
     -   **First occurrence in the entire target text**: Adds furigana only the very first time a word appears in the selected text or the entire note.
 
+-   **Exclude headings**: If enabled, furigana will not be generated for any text within a heading (e.g., `# My Heading`). Adding furigana to headings can break your [links to them](https://help.obsidian.md/Links+and+backlinks/Internal+links#Link+to+a+heading+in+a+note) so be careful when generating furigana for headings.
+
+-   **Show commands in context menu**: If enabled, the plugin's commands will appear in the right-click context menu in addition to the command palette.
+
+-   **Hide furigana unless hovered**: If enabled, furigana will be hidden by default and will only appear when you hover your mouse over the word.
+
+    > **Note**: The [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) plugin has the same setting which might conflict with this one, please double check before toggling and use only one setting for this.
+
 -   **Syntax**: Determines the markup used for generating furigana.
 
     -   **Ruby**: (Default) Uses HTML `<ruby>` tags, which render correctly in Obsidian's reading view out of the box.
     -   **Markdown**: Uses the `{kanji|reading}` syntax.
     -   **Japanese Novel**: Uses the `kanji《reading》` syntax.
         > **Warning**: To properly render the `Markdown` or `Japanese Novel` syntaxes in reading view, you will need to install a corresponding plugin like [Markdown Furigana](https://github.com/steven-kraft/obsidian-markdown-furigana) or [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby). This setting is here to support users of the mentioned plugins.
-
--   **Exclude headings**: If enabled, furigana will not be generated for any text within a heading (e.g., `# My Heading`). Adding furigana to headings can break your [links to them](https://help.obsidian.md/Links+and+backlinks/Internal+links#Link+to+a+heading+in+a+note) so be careful when generating furigana for headings.
-
--   **Show commands in context menu**: If enabled, the plugin's commands will appear in the right-click context menu in addition to the command palette.
 
 ### Filtering
 
