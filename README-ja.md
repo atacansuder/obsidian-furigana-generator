@@ -20,7 +20,7 @@ Obsidian Furigana Generator は、[Obsidian](https://obsidian.md)で日本語の
 
 1.  [obsidian.md](https://obsidian.md/)から**Obsidian**をダウンロードしてインストールします。
 2.  「設定」→「コミュニティプラグイン」→「コミュニティプラグインをオンにする」でコミュニティプラグインを有効にします。
-3.  **Obsidian Furigana Generator**をインストールします。「閲覧」をクリック → 「Obsidian Furigana Generator」を検索 → 「インストール」 → 「有効化」します。
+3.  **Furigana Generator**をインストールします。「閲覧」をクリック → 「Furigana Generator」を検索 → 「インストール」 → 「有効化」します。
 
 ## 使い方
 
