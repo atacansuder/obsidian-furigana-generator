@@ -45,8 +45,8 @@ Obsidian Furigana Generator は、[Obsidian](https://obsidian.md)で日本語の
 
 -   **テキストを選択している場合**: 選択範囲のルビを追加・削除するオプションや、選択範囲を除外リストに追加するオプションが表示されます。
 -   **テキストを選択していない場合**: ノート全体のルビを追加・削除するオプションが表示されます。
-
-> **注**: プラグイン設定の「コンテキストメニューにボタンを追加」で、コンテキストメニューのコマンドの表示・非表示を切り替えられます。これはデフォルトで有効になっています。
+> [!NOTE]
+> プラグイン設定の「コンテキストメニューにボタンを追加」で、コンテキストメニューのコマンドの表示・非表示を切り替えられます。これはデフォルトで有効になっています。
 
 ## 設定
 
@@ -55,8 +55,8 @@ Obsidian Furigana Generator は、[Obsidian](https://obsidian.md)で日本語の
 ### 一般
 
 -   **言語**: プラグインのインターフェースと言語の表示言語を設定します。英語と日本語が利用可能です。
-
-    > **注**: 言語を変更した後、コマンドパレットやコンテキストメニューに変更を完全に反映させるには、Obsidian のリロードが必要な場合があります。
+> [!NOTE]
+> 言語を変更した後、コマンドパレットやコンテキストメニューに変更を完全に反映させるには、Obsidian のリロードが必要な場合があります。
 
 -   **最初の漢字だけにふりがなをつける**: 特定のテキスト内で繰り返し出現する単語に、どのくらいの頻度でルビを振るかを制御します。
 
@@ -72,8 +72,8 @@ Obsidian Furigana Generator は、[Obsidian](https://obsidian.md)で日本語の
 ### 表示設定
 
 -   **ホバーするまでふりがなを非表示**: 有効にすると、ルビはデフォルトで非表示になり、単語の上にマウスカーソルを合わせたときだけ表示されます。
-
-    > **注**: [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) プラグインにも同様の設定があり、競合する可能性があります。切り替える前によく確認し、どちらか一方の設定のみを使用してください。
+> [!NOTE]
+> [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) プラグインにも同様の設定があり、競合する可能性があります。切り替える前によく確認し、どちらか一方の設定のみを使用してください。
 
 -   **ふりがなフォントサイズ (Furigana font size)**: 本文のフォントサイズを基準に、ルビのテキストサイズを調整します。スライダーを使って 50%（デフォルト）から 150%の間で値を設定できます。
 
@@ -82,7 +82,8 @@ Obsidian Furigana Generator は、[Obsidian](https://obsidian.md)で日本語の
     -   **Ruby**: （デフォルト）HTML の`<ruby>`タグを使用します。これは Obsidian の閲覧ビューでそのまま正しくレンダリングされます。
     -   **Markdown**: `{漢字|よみ}`という構文を使用します。
     -   **Japanese Novel**: `漢字《よみ》`という構文を使用します。
-        > **警告**: `Markdown` または `Japanese Novel` 構文を閲覧ビューで正しくレンダリングするには、[Markdown Furigana](https://github.com/steven-kraft/obsidian-markdown-furigana) や [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) のような対応するプラグインをインストールする必要があります。この設定は、これらのプラグインのユーザーをサポートするために用意されています。
+> [!WARNING] 
+> **警告**: `Markdown` または `Japanese Novel` 構文を閲覧ビューで正しくレンダリングするには、[Markdown Furigana](https://github.com/steven-kraft/obsidian-markdown-furigana) や [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) のような対応するプラグインをインストールする必要があります。この設定は、これらのプラグインのユーザーをサポートするために用意されています。
 
 ### フィルター
 
