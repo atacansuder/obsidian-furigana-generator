@@ -77,7 +77,7 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
 
     > **Note**: The [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) plugin has the same setting which might conflict with this one, please double check before toggling and use only one setting for this.
 
--   **Furigana font size**: Adjusts the size of the furigana text. You can use the slider to set a value between 100% (default) and 200%.
+-   **Furigana font size**: Adjusts the size of the furigana text relative to the main font size. You can use the slider to set a value between 50% (default) and 150%.
 
 -   **Syntax**: Determines the markup used for generating furigana.
 

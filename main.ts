@@ -123,6 +123,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 
 	onunload() {
 		document.body.classList.remove("furigana-hover-hide");
+		document.body.classList.remove("custom-furigana-size");
 		document.documentElement.style.removeProperty("--furigana-font-size");
 	}
 
@@ -149,6 +150,11 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			"--furigana-font-size",
 			`${this.settings.furiganaFontSize}%`
 		);
+		if (this.settings.furiganaFontSize !== 50) {
+			document.body.classList.add("custom-furigana-size");
+		} else {
+			document.body.classList.remove("custom-furigana-size");
+		}
 	}
 
 	async addFuriganaToSelection(editor: Editor) {

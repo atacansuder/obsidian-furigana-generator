@@ -34,7 +34,7 @@ export const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 	excludeHeadings: true,
 	showInContextMenu: true,
 	hideFuriganaOnHover: false,
-	furiganaFontSize: 100,
+	furiganaFontSize: 50,
 	jlptLevelsToInclude: {
 		n5: true,
 		n4: true,
@@ -218,7 +218,7 @@ export class GeneralSettingTab extends PluginSettingTab {
 
 		fontSizeSetting.addSlider((slider) => {
 			slider
-				.setLimits(100, 200, 1)
+				.setLimits(50, 150, 5)
 				.setValue(this.plugin.settings.furiganaFontSize)
 				.setDynamicTooltip()
 				.onChange(async (value) => {
