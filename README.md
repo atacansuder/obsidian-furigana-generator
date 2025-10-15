@@ -47,8 +47,8 @@ You can also access the commands by right-clicking in the editor. The options th
 
 -   **If you have text selected**: The menu will show options to add/remove furigana from the selection and add the selection to the exclusion list.
 -   **If you do not have text selected**: The menu will show options to add/remove furigana for the entire note.
-
-> **Note**: You can enable or disable the context menu commands in the plugin settings under "Show commands in context menu". This is enabled by default.
+> [!NOTE]
+> You can enable or disable the context menu commands in the plugin settings under "Show commands in context menu". This is enabled by default.
 
 ## Settings
 
