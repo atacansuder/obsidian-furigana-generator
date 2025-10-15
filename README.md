@@ -74,8 +74,8 @@ You can customize the plugin's behavior by navigating to `Settings` → `Communi
 ### Appearance
 
 -   **Hide furigana unless hovered**: If enabled, furigana will be hidden by default and will only appear when you hover your mouse over the word.
-
-    > **Note**: The [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) plugin has the same setting which might conflict with this one, please double check before toggling and use only one setting for this.
+> [!NOTE]
+> The [Japanese Novel Ruby](https://github.com/k-quels/japanese-novel-ruby) plugin has the same setting which might conflict with this one, please double check before toggling and use only one setting for this.
 
 -   **Furigana font size**: Adjusts the size of the furigana text relative to the main font size. You can use the slider to set a value between 50% (default) and 150%.
 
