@@ -9,7 +9,31 @@ import {
 import { jlptN5, jlptN4, jlptN3, jlptN2, jlptN1 } from "data/kanji-sets";
 import { getLangStrings } from "../lang/translations";
 
-type Tokenizer = any;
+// Defining these types here because I could not import them from the module
+interface IpadicFeatures {
+	word_id: number;
+	word_type: string;
+	word_position: number;
+	surface_form: string;
+	pos: string;
+	pos_detail_1: string;
+	pos_detail_2: string;
+	pos_detail_3: string;
+	conjugated_type: string;
+	conjugated_form: string;
+	basic_form: string;
+	reading?: string;
+	pronunciation?: string;
+}
+
+interface Tokenizer {
+	tokenize(text: string): IpadicFeatures[];
+	tokenizeForSentence(
+		sentence: string,
+		tokens: IpadicFeatures[]
+	): IpadicFeatures[];
+	getLattice(text: string): unknown;
+}
 
 export class FuriganaService {
 	private tokenizer: Tokenizer | undefined;
@@ -212,125 +236,117 @@ export class FuriganaService {
 		const kanjiRegex: RegExp = /[一-龯]/u;
 
 		return tokens
-			.map(
-				(token: {
-					surface_form: string;
-					basic_form: string;
-					reading: string;
-					word_type: string;
-				}) => {
-					const surface = token.surface_form;
-					const basicForm = token.basic_form;
-					const reading = token.reading;
+			.map((token: IpadicFeatures) => {
+				const surface = token.surface_form;
+				const basicForm = token.basic_form;
+				const reading = token.reading;
 
-					if (
-						surface.startsWith("__EXCLUDED_PLACEHOLDER_") ||
-						customExclusionSet.has(basicForm) ||
-						!kanjiRegex.test(surface) ||
-						!reading ||
-						token.word_type === "UNKNOWN" ||
-						(scope !== "ALL" && seenWords.has(surface))
-					) {
-						return surface;
-					}
-
-					const kanjiCharsInToken = [...surface].filter((char) =>
-						kanjiRegex.test(char)
-					);
-					if (
-						kanjiCharsInToken.length > 0 &&
-						kanjiCharsInToken.every((kanji) =>
-							kanjiToSkipSet.has(kanji)
-						)
-					) {
-						return surface;
-					}
-
-					const hiraganaReading = this.katakanaToHiragana(reading);
-					if (surface === hiraganaReading) {
-						return surface;
-					}
-
-					if (scope !== "ALL") {
-						seenWords.add(surface);
-					}
-
-					let result = "";
-					let surfaceIndex = 0;
-					let readingIndex = 0;
-					while (surfaceIndex < surface.length) {
-						if (kanjiRegex.test(surface[surfaceIndex])) {
-							let kanjiSequence = "";
-							let tempSurfaceIndex = surfaceIndex;
-							while (
-								tempSurfaceIndex < surface.length &&
-								kanjiRegex.test(surface[tempSurfaceIndex])
-							) {
-								kanjiSequence += surface[tempSurfaceIndex];
-								tempSurfaceIndex++;
-							}
-
-							let hiraganaPart = "";
-							let nextKanaIndexInReading = -1;
-
-							// Find the next kana character in the surface form (if any)
-							if (tempSurfaceIndex < surface.length) {
-								const nextKana = this.katakanaToHiragana(
-									surface[tempSurfaceIndex]
-								);
-								nextKanaIndexInReading =
-									hiraganaReading.indexOf(
-										nextKana,
-										readingIndex
-									);
-							}
-
-							if (nextKanaIndexInReading !== -1) {
-								hiraganaPart = hiraganaReading.substring(
-									readingIndex,
-									nextKanaIndexInReading
-								);
-								readingIndex = nextKanaIndexInReading;
-							} else {
-								// Kanji is at the end of the word
-								hiraganaPart =
-									hiraganaReading.substring(readingIndex);
-								readingIndex = hiraganaReading.length;
-							}
-
-							if (kanjiSequence !== hiraganaPart) {
-								switch (syntax) {
-									case "MARKDOWN":
-										result += `{${kanjiSequence}|${hiraganaPart}}`;
-										break;
-									case "JAPANESE-NOVEL":
-										result += `${kanjiSequence}《${hiraganaPart}》`;
-										break;
-									case "RUBY":
-									default:
-										result += `<ruby>${kanjiSequence}<rt>${hiraganaPart}</rt></ruby>`;
-										break;
-								}
-							} else {
-								result += kanjiSequence;
-							}
-							surfaceIndex = tempSurfaceIndex;
-						} else {
-							const char = surface[surfaceIndex];
-							result += char;
-							if (
-								readingIndex < hiraganaReading.length &&
-								this.katakanaToHiragana(char) ===
-									hiraganaReading[readingIndex]
-							) {
-								readingIndex++;
-							}
-							surfaceIndex++;
-						}
-					}
-					return result;
+				if (
+					surface.startsWith("__EXCLUDED_PLACEHOLDER_") ||
+					customExclusionSet.has(basicForm) ||
+					!kanjiRegex.test(surface) ||
+					!reading ||
+					token.word_type === "UNKNOWN" ||
+					(scope !== "ALL" && seenWords.has(surface))
+				) {
+					return surface;
 				}
-			)
+
+				const kanjiCharsInToken = [...surface].filter((char) =>
+					kanjiRegex.test(char)
+				);
+				if (
+					kanjiCharsInToken.length > 0 &&
+					kanjiCharsInToken.every((kanji) =>
+						kanjiToSkipSet.has(kanji)
+					)
+				) {
+					return surface;
+				}
+
+				const hiraganaReading = this.katakanaToHiragana(reading);
+				if (surface === hiraganaReading) {
+					return surface;
+				}
+
+				if (scope !== "ALL") {
+					seenWords.add(surface);
+				}
+
+				let result = "";
+				let surfaceIndex = 0;
+				let readingIndex = 0;
+				while (surfaceIndex < surface.length) {
+					if (kanjiRegex.test(surface[surfaceIndex])) {
+						let kanjiSequence = "";
+						let tempSurfaceIndex = surfaceIndex;
+						while (
+							tempSurfaceIndex < surface.length &&
+							kanjiRegex.test(surface[tempSurfaceIndex])
+						) {
+							kanjiSequence += surface[tempSurfaceIndex];
+							tempSurfaceIndex++;
+						}
+
+						let hiraganaPart = "";
+						let nextKanaIndexInReading = -1;
+
+						// Find the next kana character in the surface form (if any)
+						if (tempSurfaceIndex < surface.length) {
+							const nextKana = this.katakanaToHiragana(
+								surface[tempSurfaceIndex]
+							);
+							nextKanaIndexInReading = hiraganaReading.indexOf(
+								nextKana,
+								readingIndex
+							);
+						}
+
+						if (nextKanaIndexInReading !== -1) {
+							hiraganaPart = hiraganaReading.substring(
+								readingIndex,
+								nextKanaIndexInReading
+							);
+							readingIndex = nextKanaIndexInReading;
+						} else {
+							// Kanji is at the end of the word
+							hiraganaPart =
+								hiraganaReading.substring(readingIndex);
+							readingIndex = hiraganaReading.length;
+						}
+
+						if (kanjiSequence !== hiraganaPart) {
+							switch (syntax) {
+								case "MARKDOWN":
+									result += `{${kanjiSequence}|${hiraganaPart}}`;
+									break;
+								case "JAPANESE-NOVEL":
+									result += `${kanjiSequence}《${hiraganaPart}》`;
+									break;
+								case "RUBY":
+								default:
+									result += `<ruby>${kanjiSequence}<rt>${hiraganaPart}</rt></ruby>`;
+									break;
+							}
+						} else {
+							result += kanjiSequence;
+						}
+						surfaceIndex = tempSurfaceIndex;
+					} else {
+						const char = surface[surfaceIndex];
+						result += char;
+						if (
+							readingIndex < hiraganaReading.length &&
+							this.katakanaToHiragana(char) ===
+								hiraganaReading[readingIndex]
+						) {
+							readingIndex++;
+						}
+						surfaceIndex++;
+					}
+				}
+				return result;
+			})
 			.join("");
 	}
 
