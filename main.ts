@@ -37,40 +37,40 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		this.addCommand({
 			id: "add-furigana-to-selected-text",
 			name: t.addFuriganaSelection,
-			editorCallback: async (editor: Editor) => {
-				await this.addFuriganaToSelection(editor);
+			editorCallback: (editor: Editor) => {
+				this.addFuriganaToSelection(editor);
 			},
 		});
 
 		this.addCommand({
 			id: "remove-furigana-from-selected-text",
 			name: t.removeFuriganaSelection,
-			editorCallback: async (editor: Editor) => {
-				await this.removeFuriganaFromSelection(editor);
+			editorCallback: (editor: Editor) => {
+				this.removeFuriganaFromSelection(editor);
 			},
 		});
 
 		this.addCommand({
 			id: "add-furigana-to-entire-document",
 			name: t.addFuriganaNote,
-			editorCallback: async (editor: Editor) => {
-				await this.addFuriganaToDocument(editor);
+			editorCallback: (editor: Editor) => {
+				this.addFuriganaToDocument(editor);
 			},
 		});
 
 		this.addCommand({
 			id: "remove-furigana-from-entire-document",
 			name: t.removeFuriganaNote,
-			editorCallback: async (editor: Editor) => {
-				await this.removeFuriganaFromDocument(editor);
+			editorCallback: (editor: Editor) => {
+				this.removeFuriganaFromDocument(editor);
 			},
 		});
 
 		this.addCommand({
 			id: "add-kanjis-to-exclusion-list",
 			name: t.excludeKanjisCommand,
-			editorCallback: async (editor: Editor) => {
-				await this.addKanjisToExclusionList(editor);
+			editorCallback: (editor: Editor) => {
+				this.addKanjisToExclusionList(editor);
 			},
 		});
 
@@ -83,37 +83,37 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 					menu.addItem((item) => {
 						item.setTitle(t.addFuriganaSelection)
 							.setIcon("plus")
-							.onClick(async () => {
-								await this.addFuriganaToSelection(editor);
+							.onClick(() => {
+								this.addFuriganaToSelection(editor);
 							});
 					});
 					menu.addItem((item) => {
 						item.setTitle(t.removeFuriganaSelection)
 							.setIcon("minus")
-							.onClick(async () => {
-								await this.removeFuriganaFromSelection(editor);
+							.onClick(() => {
+								this.removeFuriganaFromSelection(editor);
 							});
 					});
 					menu.addItem((item) => {
 						item.setTitle(t.excludeKanjisCommand)
 							.setIcon("save")
-							.onClick(async () => {
-								await this.addKanjisToExclusionList(editor);
+							.onClick(() => {
+								this.addKanjisToExclusionList(editor);
 							});
 					});
 				} else {
 					menu.addItem((item) => {
 						item.setTitle(t.addFuriganaNote)
 							.setIcon("file-plus")
-							.onClick(async () => {
-								await this.addFuriganaToDocument(editor);
+							.onClick(() => {
+								this.addFuriganaToDocument(editor);
 							});
 					});
 					menu.addItem((item) => {
 						item.setTitle(t.removeFuriganaNote)
 							.setIcon("file-minus")
-							.onClick(async () => {
-								await this.removeFuriganaFromDocument(editor);
+							.onClick(() => {
+								this.removeFuriganaFromDocument(editor);
 							});
 					});
 				}
@@ -157,26 +157,25 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		}
 	}
 
-	async addFuriganaToSelection(editor: Editor) {
+	addFuriganaToSelection(editor: Editor) {
 		const selection = editor.getSelection();
-		const selectionWithFurigana =
-			await this.furiganaService.generateFurigana(
-				selection,
-				this.settings.jlptLevelsToInclude,
-				this.settings.scope,
-				this.settings.excludeHeadings,
-				this.settings.customExclusionList,
-				this.settings.syntax
-			);
+		const selectionWithFurigana = this.furiganaService.generateFurigana(
+			selection,
+			this.settings.jlptLevelsToInclude,
+			this.settings.scope,
+			this.settings.excludeHeadings,
+			this.settings.customExclusionList,
+			this.settings.syntax
+		);
 		editor.replaceSelection(selectionWithFurigana);
 	}
 
-	async addFuriganaToDocument(editor: Editor) {
+	addFuriganaToDocument(editor: Editor) {
 		const scrollInfo = editor.getScrollInfo();
 		const cursor = editor.getCursor();
 
 		const content = editor.getValue();
-		const contentWithFurigana = await this.furiganaService.generateFurigana(
+		const contentWithFurigana = this.furiganaService.generateFurigana(
 			content,
 			this.settings.jlptLevelsToInclude,
 			this.settings.scope,
@@ -190,21 +189,21 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 		editor.setCursor(cursor);
 	}
 
-	async removeFuriganaFromSelection(editor: Editor) {
+	removeFuriganaFromSelection(editor: Editor) {
 		const selection = editor.getSelection();
 		const selectionWithoutFurigana =
-			await this.furiganaService.removeFurigana(selection);
+			this.furiganaService.removeFurigana(selection);
 		editor.replaceSelection(selectionWithoutFurigana);
 	}
 
-	async removeFuriganaFromDocument(editor: Editor) {
+	removeFuriganaFromDocument(editor: Editor) {
 		const content = editor.getValue();
 		const contentWithoutFurigana =
-			await this.furiganaService.removeFurigana(content);
+			this.furiganaService.removeFurigana(content);
 		editor.setValue(contentWithoutFurigana);
 	}
 
-	async addKanjisToExclusionList(editor: Editor) {
+	addKanjisToExclusionList(editor: Editor) {
 		const selection = editor.getSelection();
 		const t = getLangStrings(this.settings.language);
 
@@ -213,9 +212,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 			return;
 		}
 
-		const extractedKanjis = await this.furiganaService.extractKanjis(
-			selection
-		);
+		const extractedKanjis = this.furiganaService.extractKanjis(selection);
 		const uniqueKanjis = [...new Set(extractedKanjis)];
 
 		// Filter existing kanjis
@@ -239,7 +236,7 @@ export default class ObsidianFuriganaGenerator extends Plugin {
 				await this.saveSettings();
 
 				if (shouldRemoveFurigana) {
-					await this.removeFuriganaFromSelection(editor);
+					this.removeFuriganaFromSelection(editor);
 				}
 				new Notice(t.excludeKanjisSaved);
 			}

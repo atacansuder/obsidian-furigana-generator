@@ -64,14 +64,14 @@ export class FuriganaService {
 		}
 	}
 
-	public async generateFurigana(
+	public generateFurigana(
 		text: string,
 		jlptLevelsToInclude: JlptLevelsToInclude,
 		scope: FirstInstanceScope,
 		excludeHeadings: boolean,
 		customExclusionList: string[],
 		syntax: FuriganaSyntax
-	): Promise<string> {
+	): string {
 		const placeholders: string[] = [];
 
 		const headingPattern = excludeHeadings ? "|(?:^|\\n)#{1,6} .+$" : "";
@@ -114,7 +114,7 @@ export class FuriganaService {
 		let processedText: string;
 
 		switch (scope) {
-			case "PARAGRAPH":
+			case "PARAGRAPH": {
 				const paragraphs = textWithPlaceholders.split("\n");
 				processedText = paragraphs
 					.map((paragraph) => {
@@ -130,7 +130,8 @@ export class FuriganaService {
 					})
 					.join("\n");
 				break;
-			case "SENTENCE":
+			}
+			case "SENTENCE": {
 				const paragraphSeparated = textWithPlaceholders.split("\n");
 				const sentenceRegex = /(?<=[。！？])/g;
 				processedText = paragraphSeparated
@@ -153,9 +154,10 @@ export class FuriganaService {
 					})
 					.join("\n");
 				break;
+			}
 			case "ENTIRE_TEXT":
 			case "ALL":
-			default:
+			default: {
 				const seenWords = new Set<string>();
 				processedText = this.processText(
 					textWithPlaceholders,
@@ -166,6 +168,7 @@ export class FuriganaService {
 					syntax
 				);
 				break;
+			}
 		}
 
 		placeholders.forEach((originalTag, index) => {
@@ -176,7 +179,7 @@ export class FuriganaService {
 		return processedText;
 	}
 
-	public async removeFurigana(text: string): Promise<string> {
+	public removeFurigana(text: string): string {
 		const furiganaRegex =
 			/<ruby>(.*?)<rt>.*?<\/rt><\/ruby>|\{(.+?)\|.+?\}|(.+?)《.+?》/g;
 		return text.replace(
@@ -185,7 +188,7 @@ export class FuriganaService {
 		);
 	}
 
-	public async extractKanjis(text: string): Promise<string[]> {
+	public extractKanjis(text: string): string[] {
 		const t = getLangStrings(this.languageSetting);
 		if (!this.tokenizer) {
 			new Notice(t.fsNotSupported);
@@ -213,7 +216,7 @@ export class FuriganaService {
 			return text;
 		}
 
-		const kanjiToSkipSet = new Set<String>();
+		const kanjiToSkipSet = new Set<string>();
 		const levelMap = {
 			n5: jlptN5,
 			n4: jlptN4,
@@ -240,6 +243,7 @@ export class FuriganaService {
 				const surface = token.surface_form;
 				const basicForm = token.basic_form;
 				const reading = token.reading;
+				console.log(token);
 
 				if (
 					surface.startsWith("__EXCLUDED_PLACEHOLDER_") ||

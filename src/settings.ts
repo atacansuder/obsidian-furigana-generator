@@ -47,7 +47,7 @@ export const DEFAULT_SETTINGS: FuriganaGeneratorPluginSettings = {
 
 export class KanjisExclusionModal extends Modal {
 	kanjis: string[];
-	onSubmit: (shouldRemoveFurigana: boolean) => void;
+	onSubmit: (shouldRemoveFurigana: boolean) => Promise<void>;
 	private textArea: TextAreaComponent;
 	plugin: ObsidianFuriganaGenerator;
 	private shouldRemoveFurigana = true;
@@ -56,7 +56,7 @@ export class KanjisExclusionModal extends Modal {
 		app: App,
 		plugin: ObsidianFuriganaGenerator,
 		kanjis: string[],
-		onSubmit: (shouldRemoveFurigana: boolean) => void
+		onSubmit: (shouldRemoveFurigana: boolean) => Promise<void>
 	) {
 		super(app);
 		this.plugin = plugin;
@@ -96,8 +96,8 @@ export class KanjisExclusionModal extends Modal {
 				btn
 					.setButtonText(t.excludeKanjisModalConfirm)
 					.setCta()
-					.onClick(() => {
-						this.onSubmit(this.shouldRemoveFurigana);
+					.onClick(async () => {
+						await this.onSubmit(this.shouldRemoveFurigana);
 						this.close();
 					})
 			)
