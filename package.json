@@ -1,6 +1,6 @@
 {
 	"name": "furigana-generator",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Automatically generates furigana for Japanese characters.",
 	"main": "main.js",
 	"scripts": {
