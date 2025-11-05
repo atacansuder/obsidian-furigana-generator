@@ -304,6 +304,19 @@ export class FuriganaService {
 								nextKana,
 								readingIndex
 							);
+
+							// Handle ambiguous okurigana like '聞き手' (reading 'ききて').
+							// 'indexOf' finds the first 'き' at index 0, which is the
+							// reading for '聞', not the okurigana 'き'.
+							if (nextKanaIndexInReading === readingIndex) {
+								const nextMatch = hiraganaReading.indexOf(
+									nextKana,
+									readingIndex + 1
+								);
+								if (nextMatch !== -1) {
+									nextKanaIndexInReading = nextMatch;
+								}
+							}
 						}
 
 						if (nextKanaIndexInReading !== -1) {
