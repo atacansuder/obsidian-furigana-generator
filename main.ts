@@ -1,5 +1,5 @@
 import { FuriganaService } from "src/furigana-service";
-import { App, Editor, Notice, Plugin, FileSystemAdapter } from "obsidian";
+import { Editor, Notice, Plugin, FileSystemAdapter } from "obsidian";
 import { getLangStrings } from "./lang/translations";
 import {
 	FuriganaGeneratorPluginSettings,
