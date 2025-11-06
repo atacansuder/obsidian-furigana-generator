@@ -17,6 +17,9 @@ const context = await esbuild.context({
 	platform: "node",
 	entryPoints: ["main.ts"],
 	bundle: true,
+	loader: {
+		".dat.gz": "binary",
+	},
 	external: [
 		"obsidian",
 		"electron",

@@ -8,6 +8,22 @@ import {
 } from "lib/types";
 import { jlptN5, jlptN4, jlptN3, jlptN2, jlptN1 } from "data/kanji-sets";
 import { getLangStrings } from "../lang/translations";
+import zlib from "zlib";
+import util from "node:util";
+
+// Dictionary files
+import base_dat from "../node_modules/@patdx/kuromoji/dict/base.dat.gz";
+import cc_dat from "../node_modules/@patdx/kuromoji/dict/cc.dat.gz";
+import check_dat from "../node_modules/@patdx/kuromoji/dict/check.dat.gz";
+import tid_dat from "../node_modules/@patdx/kuromoji/dict/tid.dat.gz";
+import tid_map_dat from "../node_modules/@patdx/kuromoji/dict/tid_map.dat.gz";
+import tid_pos_dat from "../node_modules/@patdx/kuromoji/dict/tid_pos.dat.gz";
+import unk_dat from "../node_modules/@patdx/kuromoji/dict/unk.dat.gz";
+import unk_char_dat from "../node_modules/@patdx/kuromoji/dict/unk_char.dat.gz";
+import unk_compat_dat from "../node_modules/@patdx/kuromoji/dict/unk_compat.dat.gz";
+import unk_invoke_dat from "../node_modules/@patdx/kuromoji/dict/unk_invoke.dat.gz";
+import unk_map_dat from "../node_modules/@patdx/kuromoji/dict/unk_map.dat.gz";
+import unk_pos_dat from "../node_modules/@patdx/kuromoji/dict/unk_pos.dat.gz";
 
 // Defining these types here because I could not import them from the module
 interface IpadicFeatures {
@@ -26,6 +42,40 @@ interface IpadicFeatures {
 	pronunciation?: string;
 }
 
+const dictionaryFiles: Record<string, Uint8Array> = {
+	"base.dat.gz": base_dat,
+	"cc.dat.gz": cc_dat,
+	"check.dat.gz": check_dat,
+	"tid.dat.gz": tid_dat,
+	"tid_map.dat.gz": tid_map_dat,
+	"tid_pos.dat.gz": tid_pos_dat,
+	"unk.dat.gz": unk_dat,
+	"unk_char.dat.gz": unk_char_dat,
+	"unk_compat.dat.gz": unk_compat_dat,
+	"unk_invoke.dat.gz": unk_invoke_dat,
+	"unk_map.dat.gz": unk_map_dat,
+	"unk_pos.dat.gz": unk_pos_dat,
+};
+
+const gunzip = util.promisify(zlib.gunzip);
+
+interface KuromojiLoaderConfig {
+	loadArrayBuffer(file: string): Promise<ArrayBufferLike>;
+}
+
+// Custom loader for dictionary
+class BundledDictionaryLoader implements KuromojiLoaderConfig {
+	async loadArrayBuffer(file: string): Promise<ArrayBufferLike> {
+		const gzippedData = dictionaryFiles[file];
+		if (!gzippedData) {
+			throw new Error(`Dictionary file not found in bundle: ${file}`);
+		}
+
+		const decompressed = await gunzip(gzippedData);
+		return decompressed.buffer;
+	}
+}
+
 interface Tokenizer {
 	tokenize(text: string): IpadicFeatures[];
 	tokenizeForSentence(
@@ -37,11 +87,9 @@ interface Tokenizer {
 
 export class FuriganaService {
 	private tokenizer: Tokenizer | undefined;
-	private dictionaryPath: string;
 	private languageSetting: LanguageSetting;
 
-	constructor(basePath: string, languageSetting: LanguageSetting) {
-		this.dictionaryPath = `${basePath}/`;
+	constructor(languageSetting: LanguageSetting) {
 		this.languageSetting = languageSetting;
 	}
 
@@ -49,14 +97,9 @@ export class FuriganaService {
 		const t = getLangStrings(this.languageSetting);
 		try {
 			const kuromoji = await import("@patdx/kuromoji");
-			const { default: NodeDictionaryLoader } = await import(
-				"@patdx/kuromoji/node"
-			);
 
 			this.tokenizer = await new kuromoji.TokenizerBuilder({
-				loader: new NodeDictionaryLoader({
-					dic_path: this.dictionaryPath,
-				}),
+				loader: new BundledDictionaryLoader(),
 			}).build();
 		} catch (error) {
 			console.error(`[Obsidian Furigana Generator]: ${error}`);

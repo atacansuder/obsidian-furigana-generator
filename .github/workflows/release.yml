@@ -29,10 +29,7 @@ jobs:
               run: |
                   tag="${GITHUB_REF#refs/tags/}"
 
-                  ASSETS=("main.js" "manifest.json" "styles.css")
-                  ASSETS+=($(find . -maxdepth 1 -name "*.dat.gz" -type f))
-
                   gh release create "$tag" \
                     --title="$tag" \
                     --draft \
-                    "${ASSETS[@]}"
+                    main.js manifest.json styles.css
