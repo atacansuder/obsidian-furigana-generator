@@ -243,7 +243,6 @@ export class FuriganaService {
 				const surface = token.surface_form;
 				const basicForm = token.basic_form;
 				const reading = token.reading;
-				console.log(token);
 
 				if (
 					surface.startsWith("__EXCLUDED_PLACEHOLDER_") ||
